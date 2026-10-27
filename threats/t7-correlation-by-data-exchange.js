@@ -3,7 +3,7 @@
   {
     id: "T7",
     name: "Correlation by Data Exchange",
-    desc: "using multiple contextualized unique DIDs with different parties can lead to correlation if, in the context of those DIDs, the user exchanges additional correlatable information. For example, sharing an address in order to receive a product, allows anyone who received that address to correlate the user as potentially the same person.",
+    desc: "using multiple contextualized unique DIDs (<a>D1</a>) with different parties can lead to correlation if, in the context of those DIDs, the user (<a>E1</a>) exchanges additional correlatable information. For example, sharing an address in order to receive a product, allows anyone who received that address to correlate the user as potentially the same person.",
     response: [
       { id: "R9", name: "Duty of Loyalty (repeat)", desc: "Paper: A Duty of Loyalty for Privacy Law" },
       { id: "Rx", name: "TOS (don't correlate)" },
