@@ -421,9 +421,33 @@
   <section id="stakeholders">
     <h2>Stakeholders</h2>
     <section>
-      <h3>E1 DID URL User</h3>
+      <h3>E1 DID Controller</h3>
       <p>
-        The primary end user for DID resolution is an individual human seeking
+        The DID Controller (<a>E1</a>) creates, updates, and deactivates their
+        DID (<a>D1</a>) using a DID Controller Application (<a>P1</a>). The DID
+        Controller may be an individual or an organization.
+      </p>
+      <p>
+        The DID Controller is primarily concerned with the integrity of the DID
+        Document as created and updated by them. They need assurance that only
+        they can update or deactivate it, that the cryptographic material they
+        publish is the material they provided, and that their updates
+        (<a>F2</a>) reach the VDR and propagate to other VDR nodes (<a>F3</a>)
+        reliably and in a timely manner.
+      </p>
+      <p>
+        The DID Controller's choice of DID method is their most significant
+        security decision, as it determines which VDR they must trust
+        (<a>T1</a>) and how their DID can be resolved. Because DID documents
+        are typically public, the DID Controller is also concerned with what
+        information their DID document reveals and how it might be used to
+        correlate their activity.
+      </p>
+    </section>
+    <section>
+      <h3>E2 DID URL User</h3>
+      <p>
+        The primary consumer of a DID URL is an individual or organization seeking
         to use a DID URL for some purpose. There are two major categories of
         [=DID URL User=]:
       </p>
@@ -455,198 +479,98 @@
       </p>
       <p>
         As a technical layperson, the DID URL User requires a certain
-        reliability and simplicity; the system should “just work” in
-        the
-        manner they have become accustomed to on the Web. When their
-        software
-        encounters a DID URL, it should work just like any URL,
-        without
+        reliability and simplicity; the system should “just work” in the manner
+        they have become accustomed to on the Web. When their software
+        encounters a DID URL, it should work just like any URL, without
         additional interactions, when possible.
       </p>
       <p>
-        Perhaps most importantly, the DID URL User SHOULD retain
-        complete
+        Perhaps most importantly, the DID URL User SHOULD retain complete
         control over which software and services they use for DID
         resolution.</p>
       <p>
         In practice, most individuals will make choices based on brand
-        confidence and peer recommendations. End users choose the
-        software
-        they want to run and the services they access, including which
-        resolvers to use for specific DID methods. Just like a web
-        browser
-        enables end users to choose which website they want to visit,
-        DID URL
-        users MUST be able to direct their DID client software to use
-        the
-        resolvers they trust. In practice, software will be delivered
-        with
-        default services and many users will never see the difference,
-        just as
-        some users may start on a browser's default home page and only
-        click
-        on links, never typing a URL into an address bar. However, it
-        is a
-        fundamental security decision that end users get to decide
-        which
-        resolvers are trusted.
+        confidence and peer recommendations. End users choose the software they
+        want to run and the services they access, including which resolvers to
+        use for specific DID methods. Just like a web browser enables end users
+        to choose which website they want to visit, DID URL users MUST be able
+        to direct their DID client software to use the resolvers they trust. In
+        practice, software will be delivered with default services and many
+        users will never see the difference, just as some users may start on a
+        browser's default home page and only click on links, never typing a URL
+        into an address bar. However, it is a fundamental security decision that
+        end users get to decide which resolvers are trusted.
       </p>
       <p>
         Finally, the DID URL User may have any number of accessibility
-        challenges, from visual impairments to language gaps. While it
-        is
-        important that DID resolution works seamlessly without a lot
-        of
-        cognitive burden, implementations should take care to ensure
-        that the
-        broadest number of users can effectively use the technology,
-        especially when interactive prompts are used to confirm or
-        direct
-        intermediary behavior. For example, did:btcr has an iterative
-        resolution process, where the data required to complete
-        resolution may
-        not be known–even as a requirement–when the DID URL is
-        initially
-        presented.
+        challenges, from visual impairments to language gaps. While it is
+        important that DID resolution works seamlessly without a lot of
+        cognitive burden, implementations should take care to ensure that the
+        broadest number of users can effectively use the technology, especially
+        when interactive prompts are used to confirm or direct intermediary
+        behavior. For example, did:btcr has an iterative resolution process,
+        where the data required to complete resolution may not be known–even as
+        a requirement–when the DID URL is initially presented.
       </p>
     </section>
     <section>
-      <h3>E2 Client Code Maintainer</h3>
+      <h3>E3 DID URL Author</h3>
       <p>
-        The client code maintainer cares about the integrity of their
-        software
-        code base.
+        The DID URL Author (<a>E3</a>) constructs a DID URL (<a>D4</a>) and
+        gives it to the DID URL User (<a>E2</a>) through some means
+        (<a>F4</a>). The author may be the issuer of a verifiable credential,
+        the author of an email or document, a website, or a presenter showing
+        a DID on-screen. The author may or may not be the DID Controller
+        (<a>E1</a>) of the DID in the DID URL.
+      </p>
+      <p>
+        The DID URL Author is primarily concerned that the DID URL reaches the
+        DID URL User intact and is recognized as authentic. Once the DID URL is
+        given, the author has no control over which software or resolver the
+        user relies on, so they depend on the user's choices to retrieve the
+        resource they intended. The author is also concerned that others might
+        impersonate them by substituting a different or look-alike DID URL.
       </p>
     </section>
     <section>
-      <h3>E3 Client Administrator</h3>
+      <h3>E4 Resolver Service Provider</h3>
       <p>
-        The client administrator cares about a reliably working client
-        device.
-        They want to know the software configuration on the device
-        aligns with
-        individual and/or corporate policy, especially with regard to
-        resolver
-        selection and library adoption.
-      </p>
-    </section>
-    <section>
-      <h3>E4 Client Service Provider</h3>
-      <p>
-        If the client service provider is primarily concerned with the
-        integrity, usability, and profitability/cost of the service.
-        For
-        typical consumer usage, the end user is the client service
-        provider,
-        but when the client is run on behalf of a corporation for its
-        employees, that employer is the client service provider.
+        The Resolver Service Provider (<a>E4</a>) ensures that the resolution
+        service (<a>P4</a>) is running as configured and without errors.
       </p>
       <p>
-        The Client Service Provider cares about the code and
-        configuration on
-        the device is as the administrator has established, based on
-        the
-        service provider’s policies.
-      </p>
-    </section>
-    <section>
-      <h3>E5 Resolver Code Maintainer</h3>
-      <p>
-        The resolver code maintainer wants to ensure that their code
-        is
-        provably executing the resolution function as defined in the
-        DID
-        methods it supports.
-      </p>
-    </section>
-    <section>
-      <h3>E6 Resolver Administrator</h3>
-      <p>
-        The resolver administrator wants to ensure that the resolution
-        service
-        is configured as intended and that any libraries or original
-        software
-        is reliably performing as needed and expected.
-      </p>
-    </section>
-    <section>
-      <h3>E7 Resolver Service Provider</h3>
-      <p>
-        The resolver administrator wants to ensure that the resolution
-        service
-        is running as configured and without errors.
-      </p>
-      <p>
-        Fundamentally, the resolver service must be trustworthy enough
-        for
-        users to be willing to rely on its service for
-        cryptographically
-        anchored interactions. Since DIDs can be used to secure
-        information
-        and transactions of arbitrary value, the service provider
-        necessarily
+        Fundamentally, the resolver service must be trustworthy enough for
+        users to be willing to rely on its results for cryptographically
+        anchored interactions. Since DIDs can be used to secure information
+        and transactions of arbitrary value, the service provider necessarily
         wants to be perceived as reliable, friendly, and easy to use.
       </p>
       <p>
-        At the end of the day, it's the resolver service provider that
-        the DID
-        URL User is trusting to return the real, authoritative DID
-        document.
+        At the end of the day, it's the Resolver Service Provider that the DID
+        URL User (<a>E2</a>) is trusting (<a>T2</a>) to return the real,
+        authoritative DID document.
       </p>
     </section>
     <section>
-      <h3>E8 VDR Code Maintainer</h3>
+      <h3>E5 Controller VDR Service Provider and E6 Resolver VDR Service
+        Provider</h3>
       <p>
-        The VDR Code Maintainer cares primarily about the quality of
-        their
-        code. Many VDRs are open source, but there is no expectation
-        that this
-        is always true. Whether open or closed source, the code
-        maintainer
-        wants to be able to maintain code quality so that those who
-        rely on
-        their software can rest assured that the software is doing
-        exactly
-        what is promised, and no more.
+        VDR service providers care about providing a reliable verifiable data
+        registry, for whatever purpose that VDR is used for. The Controller VDR
+        Service Provider (<a>E5</a>) operates the Controller VDR node
+        (<a>P2</a>) that accepts updates from the DID Controller, while the
+        Resolver VDR Service Provider (<a>E6</a>) operates the Resolver VDR node
+        (<a>P5</a>) queried by the resolver. These may be the same party or
+        entirely different parties.
       </p>
       <p>
-        That said, the VDR Code Maintainer may only care about the
-        Verifiable
-        Data Registry, without any expectation of use beyond that. To
-        wit,
-        BTCR2 can use a VDR device that is directly running a full
-        bitcoin
-        node; in that configuration, the VDR code maintainer is a
-        bitcoin core
-        developer. Bitcoin core developers care primarily about the
-        integrity
-        of the bitcoin network as maintained by bitcoin core. They
-        don't care
-        about DIDs, nor do they need to.
-      </p>
-    </section>
-    <section>
-      <h3>E9 VDR Administrator</h3>
-      <p>
-        The VDR administrator runs the actual VDR device queried by
-        the
-        resolver. In most configurations, they care primarily (perhaps
-        ONLY)
-        about the reliable operation of the VDR device.
-      </p>
-    </section>
-    <section>
-      <h3>E10 VDR Service Provider</h3>
-      <p>
-        VDR service providers care about providing a reliable
-        verifiable data
-        registry, for whatever purpose that VDR is used for. Often a
-        VDR
-        service provider stands up a VDR device as a public service,
-        such as
-        bitcoin nodes that are accessible by others. Some service
-        providers
-        may offer VDR capability as a paid service.
+        Often a VDR service provider stands up a VDR device as a public service,
+        such as Bitcoin nodes that are accessible by others. Some service
+        providers may offer VDR capability as a paid service. In some cases, VDR
+        service providers who operate VDR nodes in support of a distributed
+        network (such as Ethereum or Bitcoin nodes) may not even be aware that
+        their VDR is being used for DIDs, nor do they need to be: the VDR maintains
+        its integrity on its own terms. 
       </p>
     </section>
   </section>
