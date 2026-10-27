@@ -17,7 +17,7 @@
         desc: ""
       }
     ],
-    elements: ["E1", "E7"],
+    elements: ["E2", "E4"],
     taxonomyName: "STRIDE",
     taxonomyClass: "Information Disclosure"
   };

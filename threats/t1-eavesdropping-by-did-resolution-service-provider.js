@@ -30,7 +30,7 @@
           desc: "Use a locally controlled resolver rather than using a service provider."
         }
       ],
-      elements: ["E7", "F1", "C2", "P2", "D7"],
+      elements: ["E4", "F6", "C4", "P4", "D6"],
       taxonomyName: "STRIDE",
       taxonomyClass: "Information Disclosure"
     };
