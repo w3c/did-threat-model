@@ -59,95 +59,59 @@
   <section id="Introduction">
     <h2>Introduction</h2>
     <p>
-      DID Resolution is the first step in dereferencing a DID URL.
+      Decentralized identifiers (DIDs) enable verifiable, decentralized
+      digital identity.
     </p>
     <p>
-      Dereferencing means taking a reference to a resource and
-      bringing that
-      resource into the current computational context.
+      In contrast to typical federated identifiers, DIDs have been designed
+      so that they may be decoupled from centralized registries, identity
+      providers, and certificate authorities. DIDs are URLs that associate a
+      DID subject with a DID document allowing trustable interactions
+      associated with that subject.
     </p>
-    <p>In programming languages like <strong>c/c++</strong>, dereferencing a
-    pointer means accessing, interpreting, or applying the value pointed to by
-    that pointer in the current computational context. On the web, dereferencing
-    a URL means retrieving a representation of a resource and returning it for
-    interactions in the local context. For web pages, that means displaying the
-    retrieved HTML in the browser, with the appropriate rendering view. For
-    asynchronous JavaScript (a.k.a. AJAX) requests, it means bringing the result from
-    a HTTP request into the current JavaScript context for processing, often to
-    change the content of the page. Dereferencing a DID URL means retrieving the
-    appropriate resource referred to by the DID URL and applying it in the
-    current context.
+    <pre class="example">did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK</pre>
+    <p>
+      DID Resolution is the process of retrieving the canonical DID document
+      from the associated Verifiable Data Registry as defined by the DID's
+      method. Each DID document can express cryptographic material as
+      verification methods&mdash;enabling a party to prove use of secret
+      cryptographic material for particular verification actions like
+      authentication, authorization, and encryption&mdash;and services,
+      which  enable trusted interactions associated with the DID subject.
     </p>
     <p>
-      Resolving is the first step in dereferencing, when you acquire
-      the
-      authoritative metadata that enables resource retrieval.
-      Resolving an HTTP URL means resolving the authority part
-      (typically a host or domain name) to get the IP address to use
-      for the HTTP request. The first step in
-      dereferencing a [=DID URL=] is DID is resolving the DID URL to
-      get the DID document and associated metadata that contain the
-      cryptographic material and service endpoints for securely
-      interacting with the resource referenced by the DID URL.
-      Dereferencing uses the result returned from resolution to
-      retrieve the actual resource.
+      One can add parameters to a DID, creating a DID URL for identifying
+      specific resources other than the DID document. DID URLs are a DID with
+      optional additional path, query, or fragment part. Dereferencing a DID
+      URL, uses the result from resolving the DID in the DID URL to invoke a
+      handler that applies the DID URL in the current context, such as
+      evaluating a proof or sending a DIDComm message. Dereferencing a DID URL
+      that has no additional parameters returns the DID document.
     </p>
+    <pre class="example">did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK#key-1</pre>
+    <pre class="example">did:example:123456789abcdefghi/images/avatar.png</pre>
     <p>
-      DID URL resolution depends on method-specific interactions with
-      the DID method's Verifiable Data Registry. Every DID method
-      defines its own approach to retrieving DID state from a VDR. DID
-      Resolvers provide a standard interface to abstract those VDR
-      interactions away, enabling any DID-enabled application to rely
-      on a consistent API, regardless of how the method interacts with
-      a VDR.
-    </p>
-    <p>
-      DIDs can be used as identifiers for both subjects and issuers of
-      Verifiable Credentials and can anchor any number of
-      cryptographic
-      verification methods, such as attestations, authorizations,
-      encryption, and key agreement.
-    </p>
-    <p>
-      A discussion of Decentralized Identifier use cases can be found
-      in the <a href="https://www.w3.org/TR/did-use-cases/">W3C's Use
-        Cases
-        and
+      A discussion of use cases can be found in the <a
+        href="https://www.w3.org/TR/did-use-cases/">W3C's Use Cases and
         Requirements for Decentralized Identifiers</a>.
     </p>
-    <p>The DID Resolution specification defines how DID URL clients
-      can dereference a DID URL into the current context, including
-      how to resolve the DID URL to get the authoritative DID document
-      used for retrieving the actual resource.
-    </p>
-    <p>This document describes the threats known to the DID WG at the
-      time of developing the specification, whether addressed by the
-      specification, to be addressed by implementers, or accepted as
-      unresolvable.</p>
   </section>
 
   <section id="architecture">
     <h2>Architecture</h2>
     <p>
-      The architecture of DID resolution is anchored between three
-      roles in
-      the system (client, resolver, and VDR), each typically running
-      on separate devices, although
-      different configurations may deploy these elements differently.
-      We present a unified view of the architecture below, followed by
-      two profiles, one for did:key and a single device and one for
-      did:btcr2 relying on arbitrary VDR devices.
+      DIDs and DID Resolution are realized by four key software components,
+      each typically running on separate devices under the control over
+      different parties, although different configurations may deploy these
+      components differently.
     </p>
     <p>
-      The three primary roles are the client, the resolver, and the
-      Verifiable Data Registry (VDR). The
-      client has a DID URL the user wants to use. The client provides
-      the
-      business logic to manage DID resolution and apply the result to
-      its
-      current context. The Resolving Client connects to a DID Resolver
-      to get the authoritative DID document for that DID URL, then
-      interprets the result to update the current context.
+      The four primary software components used with DIDs are a DID
+      controller application, a DID-enabled application, a resolver, and a
+      Verifiable Data Registry (VDR) node. Since DIDs were built to enable
+      decentralized data registries, it is understood that the VDR node
+      accessed by a controller may be different than the node accessed by the
+      resolver.
     </p>
     <section>
       <h3>Diagram</h3>
@@ -157,71 +121,99 @@
     <section>
       <h3>Description</h3>
       <p>
-        This process starts with a DID User (<a>E1</a>) who has a DID URL
-        (<a>D1</a>) they would like to dereference.
+        The DID controller (<a>E1</a>) manages the DID (<a>D1</a>), by creating,
+        updating, and deactivating the DID as desired (<a>F1</a>), using a DID
+        Controller application (<a>P1</a>) running on a DID Controller Device
+        (<a>C1</a>) with access to its local DID Controller Data Store
+        (<a>D2</a>). The user manages the DID, the DID Controller application
+        (<a>P1</a>) updates the VDR State by communicating (<a>F2</a>) with its
+        preferred VDR Node (<a>P2</a>) which has access to its local data store
+        (<a>D3</a>) which is kept in sync (<a>F3</a>) with other VDR nodes. Each
+        VDR node (<a>P3</a>, <a>P5</a>) is understood to be running on its own
+        device (<a>C2</a>, <a>C5</a>) under control of potentially different
+        service providers (<a>E5</a>, <a>E6</a>).
       </p>
       <p>
-        Using a DID User Client Device (<a>C1</a>), the user directs the device
-        to use the DID URL through some gesture, such as: clicking on a link,
-        entering a DID manually, or scanning a QR code (<a>F0</a>). This input
-        to the DID Enabled Application (<a>P1</a>) triggers a call to Resolve
-        (<a>F1</a>), which then resolves the DID URL according to its DID
-        method, returning the authoritative DID Document (<a>D3</a>) according
-        to input options.
+        How the DID is managed (<a>F1</a>), how the VDR state is updated
+        (<a>F2</a>) and how the VDR maintains synchronization (<a>F3</a>) is
+        DID-method specific and outside the scope of the specifications under
+        analysis. Please see the method specification and any associated threat
+        models for further details.
       </p>
       <p>
-        The process by which a client device receives a DID URL and how the user
-        interacts with the application is outside the scope of this specification.
+        Resolution begins with a DID URL (<a>D4</a>) created by some DID URL
+        Author (<a>E3</a>) and given to them through some means (<a>F4</a>) and
+        given to a DID-enabled application (<a>P3</a>) by a DID URL User
+        (<a>E2</a>) to achieve some user-directed purpose. The author may be
+        the issuer of a verifiable credential who used a DID to sign a
+        credential provided by a VC holder to a VC verifier (see the Verifiable
+        Credentials specification), the author of an email containing a DID
+        URL, or a presenter at a conference, presenting a DID on-screen. How
+        the DID is given (<a>F4</a>) and used (<a>F5</a>) are both out of scope
+        for these specifications, but in scope for this threat model.
       </p>
       <p>
-        Each device in the diagram represents a different trust container, each
-        representing a specific set of code running on a particular device. Each
-        code object (<a>D4</a>, <a>D6</a>, and <a>D8</a>) is maintained by at
-        least one human maintainer (<a>E2</a>, <a>E5</a>,
-        <a>E8</a>, respectively). Each device (<a>C1</a>, <a>C2</a>, <a>C3</a>)
-        is administered by at least one human administrator (<a>E3</a>,
-        <a>E6</a>, <a>E9</a>, respectively) on behalf of a service provider
-        (<a>E4</a>, <a>E7</a>, <a>E10</a>, respectively) who, as a legal person,
-        holds operational authority over each device.
+        Once the DID-enabled application (<a>P3</a>) has a DID URL with
+        direction from the user to use that DID URL for a specific purpose, it
+        executes the appropriate business logic to manage DID resolution and
+        apply the result to use the DID as directed by the user. For example,
+        if the application has been directed to verify the proof on a
+        verifiable credential, it would use the result from resolution to do
+        that task.
       </p>
       <p>
-        It is understood that each device is operated by a service provider that
-        is administered by a human and uses code maintained by a human. In the
-        case that either the maintenance or administration is AI-driven, we
-        consider the human configuring and running that AI to be the maintainer
-        or administrator, respectively. When discussing different deployment
-        strategies, it is important to consider how these entities change and
-        how such changes impact overall system security.
+        For resolution, the DID-enabled application (<a>P3</a>) connects to a
+        DID Resolver (<a>P4</a>) to resolve the DID in the DID URL, then uses
+        that result as directed by the user. The resolver (<a>P4</a>) queries
+        the VDR state (<a>F7</a>) from its chosen VDR node (<a>P5</a>). The
+        result of resolution is a DID document (<a>D8</a>), DID document
+        metadata (<a>D9</a>), and any DID resolution metadata (<a>D10</a>).
       </p>
       <p>
-        It is also worth noting that the resolve method call (<a>F1</a>) crosses
-        a fundamental trust boundary (<a>T1</a>), where the result of the
-        resolver <em>is</em> necessarily taken as authoritative. Regardless of
-        the complexity of the resolver and VDR systems, the DID user chooses the
-        resolvers they trust and  it is understood that the choice of resolver
-        is an unavoidable build vs buy decision. However that resolver achieves
-        the result is up to the quality of its own implementation of each
-        supported DID method.
+        It is also worth noting that there are three major trust boundaries
+        that must be crossed. First, one must trust (<a>T1</a>) the VDR and the
+        software and services used to access the VDR for managing the state of
+        the VDR. Updating (<a>F2</a>), reading (<a>F7</a>), and synchronizing
+        the VDR state (<a>F3</a>) requires trusting the process called, as
+        well as the service provider hosting the VDR node and the VDR itself.
+        For example, for a Bitcoin-based DID method, you must trust the
+        software updating the VDR, the service providers they connect to for
+        reading and writing to the blockchain, and the innate guarantees of
+        Bitcoin as a distributed system. In other words, the VDR must be
+        trustworthy.
       </p>
       <p>
-        The DID Resolution process, as defined in its specification, begins
-        after the Resolver (<a>P2</a>) receives a DID (<a>D2</a>) extracted from
-        an initial DID URL and selected options. The resolver (<a>P2</a>)
-        then queries the VDR Node(<a>P3</a>) with Read VDR State (<a>F3</a>)
-        based on that state, generates the canonical DID Document (<a>D3</a>)
-        and associated metadata (<a>D10</a> and
-        <a>D11</a>) which is returned to the application (<a>P1</a>).  The
-        application takes that result and depending on whether or not a
-        secondary resource is indicated, it either returns the DID document or
-        dereferences the secondary resource.
+        Second, one must trust (<a>T2</a>) the resolver (<a>P4</a>) called when
+        resolving a particular DID, including all of its back-end processing,
+        such as how it reads from the VDR. If your deployment runs its own VDR
+        node for resolution (<a>P5</a>), the trust is with your own ability to
+        operate those services correctly including understanding the resolver
+        code and its configuration. If you rely on another party for
+        resolution, you must trust that they are doing the job correctly,
+        including whatever back-end services they might be using.
       </p>
       <p>
-        How the VDR maintains state (<a>D9</a>) and how the resolver
-        reads that
-        state (<a>F3</a>) are DID-method specific, defined in each DID
-        method
-        specification and otherwise out of scope of this
-        specification.
+        Third, the DID URL User (<a>E2</a>) must trust (<a>T3</a>) the DID URL
+        (<a>D4</a>) provided by the DID URL Author (<a>E3</a>), as well as the
+        transport mechanism that got the DID URL to the DID URL User, as there
+        is no mechanism for verifying, on its own, whether or not the DID URL
+        is legitimate. Other means should be used to verify that the DID URL is
+        from a trustable source and communicated in a trustable manner. For
+        example, DIDs in a Verifiable Credential, can be trusted if the issuer
+        and securing mechanisms are trusted. DID URLs received by email or
+        relayed by a stranger may be dangerous.
+      </p>
+      <p>
+        It is worth noting that conformant DID-enabled applications MUST allow
+        the DID URL user (<a>E2</a>) to specify which resolver (<a>P4</a>) to
+        use for any particular DID method [link to spec]. This trust decision
+        is under the control of the DID URL User because the result from the
+        resolver (<a>D8</a>, <a>D9</a>, and <a>D10</a>) is
+        <strong><em>necessarily</em></strong> taken as authoritative for those
+        artifacts, including the cryptographic material that secures DID
+        interactions. Regardless of the complexity of the resolver and VDR
+        systems, the DID user chooses the resolvers they trust, making this an
+        unavoidable <em>build vs. buy</em> decision.
       </p>
     </section>
 
@@ -243,257 +235,184 @@
       <table class="dictionary">
         <tbody>
           <tr>
-            <td class="left"><dfn
-                data-lt="E1|E1 DID URL User|DID URL User">E1 DID URL
-                User</dfn></td>
-            <td>The user of the decentralized identifier URL
-              (<a>D1</a>)</td>
+            <td class="left"><dfn data-lt="E1|E1 DID Controller|DID Controller">E1 DID Controller</dfn></td>
+            <td>The entity that manages the DID (<a>D1</a>) by creating, updating, and deactivating it as desired.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E2|E2 Client Code Maintainer|Client Code Maintainer">E2
-                Client Code Maintainer</dfn></td>
-            <td>The person maintaining the client software (<a>D4</a>)
-            </td>
+            <td><dfn data-lt="E2|E2 DID URL User|DID URL User">E2 DID URL User</dfn></td>
+            <td>The end user who uses a DID URL (<a>D4</a>) through a DID-enabled Application (<a>P3</a>) to accomplish a specific purpose.
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-did-url-user">DID URL User</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E3|E3 Client Administrator|Client Administrator">E3
-                Client Administrator</dfn></td>
-            <td>The person administering the client software
-              (<a>D4</a>) configuration on the client device
-              (<a>C1</a>)</td>
+            <td><dfn data-lt="E3|E3 DID URL Author|DID URL Author">E3 DID URL Author</dfn></td>
+            <td>The entity (e.g., a Verifiable Credential issuer or document creator) who constructs a DID URL (<a>D4</a>) and provides it to the DID URL User (<a>E2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E4|E4 Client Service Provider|Client Service Provider">E4
-                Client Service Provider</dfn></td>
-            <td>The party legally responsible for the client software
-              (<a>D4</a>) running on the client device (<a>C1</a>)
-            </td>
+            <td><dfn data-lt="E4|E4 Resolver Service Provider|Resolver Service Provider">E4 Resolver Service Provider</dfn></td>
+            <td>The party or organization operating or legally responsible for the Resolver (<a>P4</a>) on the Resolver Device (<a>C4</a>), including its configuration and any back-end services it relies on.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E5|E5 Resolver Code Maintainer|Resolver Code Maintainer">E5
-                Resolver Code Maintainer</dfn></td>
-            <td>The person maintaining the resolver software
-              (<a>D8</a>)</td>
+            <td><dfn data-lt="E5|E5 Controller VDR Service Provider|Controller VDR Service Provider">E5 Controller VDR Service Provider</dfn></td>
+            <td>The party or organization operating or legally responsible for the Controller VDR Node (<a>P2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E6|E6 Resolver Administrator|Resolver Administrator">E6
-                Resolver Administrator</dfn></td>
-            <td>The person administering the resolver software
-              (<a>D8</a>) configuration on the resolver device
-              (<a>C3</a>)</td>
+            <td><dfn data-lt="E6|E6 Resolver VDR Service Provider|Resolver VDR Service Provider">E6 Resolver VDR Service Provider</dfn></td>
+            <td>The party or organization operating or legally responsible for the Resolver VDR Node (<a>P5</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E7|E7 Resolver Service Provider|Resolver Service Provider">E7
-                Resolver Service Provider</dfn></td>
-            <td>The party legally responsible for the resolver
-              software (<a>D8</a>) running on the resolver device
-              (<a>C3</a>)</td>
+            <td><dfn data-lt="C1|C1 DID Controller Device|DID Controller Device">C1 DID Controller Device</dfn></td>
+            <td>The device under control of the DID Controller (<a>E1</a>) that runs the DID Controller Process (<a>P1</a>) and holds its local data store, DID Controller Data Store (<a>D2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E8|E8 VDR Code Maintainer|VDR Code Maintainer">E8
-                VDR Code Maintainer</dfn></td>
-            <td>The person maintaining the VDR software (<a>D6</a>)
-            </td>
+            <td><dfn data-lt="C2|C2 Controller VDR Device|Controller VDR Device">C2 Controller VDR Device</dfn></td>
+            <td>The device hosting the Controller VDR Node (<a>P2</a>) and its local VDR data store, Controller VDR Data Store (<a>D3</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E9|E9 VDR Administrator|VDR Administrator">E9
-                VDR Administrator</dfn></td>
-            <td>The person administering the VDR software (<a>D6</a>)
-              configuration on the VDR device (<a>C2</a>)</td>
+            <td><dfn data-lt="C3|C3 DID User Client Device|DID User Client Device">C3 DID User Client Device</dfn></td>
+            <td>The client device operated by the DID URL User (<a>E2</a>) that runs the DID-enabled Application (<a>P3</a>) and client data store, Client Data Store (<a>D5</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-client">client</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="E10|E10 VDR Service Provider|VDR Service Provider">E10
-                VDR Service Provider</dfn></td>
-            <td>The party legally responsible for the VDR software
-              (<a>D6</a>) running on the VDR device (<a>C2</a>)</td>
+            <td><dfn data-lt="C4|C4 Resolver Device|Resolver Device">C4 Resolver Device</dfn></td>
+            <td>The device hosting and executing the Resolver (<a>P4</a>) process and its local data, Resolver Local Data (<a>D6</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="P1|P1 DID Enabled Application|DID Enabled Application">P1
-                DID Enabled Application</dfn></td>
-            <td>The process performing DID URL dereferencing. It coordinates
-              with the resolver (<a>P2</a>) and performs
-              whatever is needed after resolution to dereference the
-              DID URL and apply the result to the current context.</td>
+            <td><dfn data-lt="C5|C5 Resolver VDR Device|Resolver VDR Device">C5 Resolver VDR Device</dfn></td>
+            <td>The device hosting the Resolver VDR Node (<a>P5</a>) and its associated VDR data store, Resolver VDR Data Store (<a>D7</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="P2|P2 Resolver|Resolver">P2
-                Resolver Process</dfn></td>
-            <td>The process running on the resolver device that knows
-              how to access the VDR for a given DID method (using
-              <a>F3</a> to reach <a>P3</a>) and interpret the response
-              to generate the canonical DID document for the DID URL
-              (<a>D1</a>) in question.
-            </td>
+            <td><dfn data-lt="P1|P1 DID Controller Process|DID Controller Process">P1 DID Controller Process</dfn></td>
+            <td>The application running on the DID Controller Device (<a>C1</a>) used by the DID Controller (<a>E1</a>) to manage the DID and submit state updates.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="P3|P3 VDR Node|VDR Node">P3 VDR
-                Process</dfn></td>
-            <td>The process that interfaces directly with the VDR data
-              store and provides selected VDR state to the resolver
-              (<a>P2</a>).</td>
+            <td><dfn data-lt="P2|P2 Controller VDR Node|Controller VDR Node">P2 Controller VDR Node</dfn></td>
+            <td>The Verifiable Data Registry node process that accepts updates from the DID Controller Process (<a>P1</a>) and keeps data synchronized.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="F0|F0 Use DID URL|Use DID URL">F0 Use
-                DID URL</dfn></td>
-            <td>The initial interaction from the DID URL User
-              (<a>E1</a>), directing the software to use the DID URL
-              (<a>D1</a>) in some fashion.</td>
+            <td><dfn data-lt="P3|P3 DID-enabled Application|DID-enabled Application">P3 DID-enabled Application</dfn></td>
+            <td>The client application running on the DID User Client Device (<a>C3</a>) that executes business logic, initiates resolution via Resolve (<a>F6</a>), and applies the result.
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-did-enabled-application">DID-enabled application</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="F1|F1 Resolve|Resolve">F1
-                Resolve</dfn></td>
-            <td>The call from the DID enabled application (<a>P1</a>)
-              to
-              the resolver (<a>P2</a>) requesting the canonical DID
-              document for a given DID URL.</td>
+            <td><dfn data-lt="P4|P4 Resolver|Resolver">P4 Resolver</dfn></td>
+            <td>The software process on the Resolver Device (<a>C4</a>) that executes DID resolution by querying VDR state via Read VDR State (<a>F7</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="F3|F3 Read VDR State|Read VDR State">F3
-                Read VDR State</dfn></td>
-            <td>The call from the resolver (<a>P2</a>) to the VDR
-              (<a>P3</a>) requesting state data related to a given DID
-              URL (<a>D1</a>)</td>
+            <td><dfn data-lt="P5|P5 Resolver VDR Node|Resolver VDR Node">P5 Resolver VDR Node</dfn></td>
+            <td>The VDR node process queried by the Resolver (<a>P4</a>) to read state data required for resolution.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="D1|D1 DID URL|DID URL">D1 DID URL</dfn>
-            </td>
-            <td>The initial DID URL, including any path, query, and
-              fragment parts. This is a pointer to a resource that may
-              be dereferencable (<a>P1</a>).</td>
+            <td><dfn data-lt="D1|D1 DID|DID">D1 DID</dfn></td>
+            <td>The Decentralized Identifier managed by the DID Controller (<a>E1</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-decentralized-identifiers">decentralized identifier (DID)</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="D2|D2 BASE DID URL|BASE DID URL">D2 BASE
-                DID URL</dfn>
-            </td>
-            <td>A version of the initial DID URL without the fragment
-              part, sent to the Resolver (<a>P2</a>). This is a
-              pointer to a resource that can
-              be dereferenced (<a>P1</a>).</td>
+            <td><dfn data-lt="D2|D2 DID Controller Data Store|DID Controller Data Store">D2 DID Controller Data Store</dfn></td>
+            <td>The local data store on the DID Controller Device (<a>C1</a>) accessible to the DID Controller Process (<a>P1</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="D3|D3 DID Document|DID Document">D3 DID
-                Document</dfn></td>
-            <td>The canonical DID document for the DID URL
-              (<a>D1</a>), taking into account any parameters that
-              might affect resolution, such as <a>versionId</a></td>
+            <td><dfn data-lt="D3|D3 Controller VDR Data Store|Controller VDR Data Store">D3 Controller VDR Data Store</dfn></td>
+            <td>The data store maintained by the Controller VDR Node (<a>P2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="D4|D4 Client Code|Client Code">D4 Client
-                Code</dfn></td>
-            <td>Software running on the client device (<a>C1</a>) to realize the DID Enabled Application (<a>P1</a>). It
-              manages the user experience as well as the dereferencing
-              (<a>P1</a>) algorithm. This
-              code includes all of the client-side software running in
-              that container. This means the business logic, the UX
-              interface, and any plugins that might be part of a
-              solution. For example, a browser that leverages an
-              extension to allow a website to dereference a DID would
-              have a much more complicated set of code, processes, and
-              flows between those components. If profiling the DID
-              architecture for more complex setups, these components
-              may deserve their own processes, code, and data stores.
-            </td>
+            <td><dfn data-lt="D4|D4 DID URL|DID URL">D4 DID URL</dfn></td>
+            <td>The DID URL (containing a DID with optional path, query, or fragment) created by the DID URL Author (<a>E3</a>) and passed to the DID URL User (<a>E2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="D5|D5 DID Client Data Store|DID Client Data Store">D5
-                DID Client Data Store</dfn></td>
-            <td>Data stored in the client device (<a>C1</a>), presumed
-              to be accessible to any process in the container,
-              including the dereferencer (<a>P1</a>) and resolver
-              (<a>P2</a>).</td>
+            <td><dfn data-lt="D5|D5 Client Data Store|Client Data Store">D5 Client Data Store</dfn></td>
+            <td>The local data store on the DID User Client Device (<a>C3</a>) accessible to the DID-enabled Application (<a>P3</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-client">client</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="D6|D6 Resolver Code|Resolver Code">D8
-                Resolver Code</dfn></td>
-            <td>Software running on the resolver device (<a>C3</a>) to
-              realize the resolver process (<a>P2</a>) and manage the
-              Resolver data store (<a>D7</a>). It handles incoming Resolve
-              (<a>F1</a>) calls, taking
-              an incoming Base DID URL (<a>D2</a>) and returning its
-              authoritative DID document (<a>D3</a>).</td>
+            <td><dfn data-lt="D6|D6 Resolver Local Data|Resolver Local Data">D6 Resolver Local Data</dfn></td>
+            <td>Data stored on the Resolver Device (<a>C4</a>) used by the Resolver (<a>P4</a>) process.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="D7|D7 Resolver Local Data|Resolver Local Data">D7
-                Resolver Local Data</dfn></td>
-            <td>Data stored on the resolver device (<a>C2</a>),
-              presumed accessible to the Resolver Process (<a>P2</a>)
-            </td>
-          <tr>
-            <td><dfn data-lt="D8|D8 VDR Code|VDR Code">D8 VDR
-                Code</dfn></td>
-            <td>Software running on the VDR device (<a>C2</a>) to instantiate the VDR Node as a running process (<a>P3</a>). 
-              It maintains the state of the VDR (<a>D9</a> and makes aspects of that state available to the resolver via the Read VDR State function (<a>F3</a>)</td>
+            <td><dfn data-lt="D7|D7 Resolver VDR Data Store|Resolver VDR Data Store">D7 Resolver VDR Data Store</dfn></td>
+            <td>The data store maintained by the Resolver VDR Node (<a>P5</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="D9|D9 VDR Data Store|VDR Data Store">D9
-                VDR Data Store</dfn></td>
-            <td>Data stored in the VDR device (<a>C2</a>), presumed
-              accessible to the VDR Process (<a>P3</a>).</td>
-          </tr>
+            <td><dfn data-lt="D8|D8 DID Document|DID Document">D8 DID Document</dfn></td>
+            <td>The canonical DID document returned as the primary result of DID resolution.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-documents">DID document</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="D10|D10 DID Document Metadata|DID Document Metadata">D10
-                DID Document Metadata</dfn></td>
-            <td>Metadata related to the DID Document (<a>D3</a>).
-              Returned by resolver (<a>P2</a>) in response to Resolve(<a>F1</a>)</a>.</td>
+            <td><dfn data-lt="D9|D9 DID Document Metadata|DID Document Metadata">D9 DID Document Metadata</dfn></td>
+            <td>Metadata describing the resolved DID Document (<a>D8</a>) (e.g., timestamps, version ID).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#did-document-metadata">DID Document Metadata</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="D11|D11 DID Resolution Metadata|DID Resolution Metadata">D11
-                DID Resolution Metadata</dfn></td>
-            <td>Metadata related to the DID Resolution. Returned by
-              resolver (<a>P2</a>) in response to Resolve (<a>F1</a>).</td>
+            <td><dfn data-lt="D10|D10 DID Resolution Metadata|DID Resolution Metadata">D10 DID Resolution Metadata</dfn></td>
+            <td>Metadata describing the resolution process itself (e.g., content type, error codes).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#did-resolution-metadata">DID Resolution Metadata</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="C1|C1 DID User Client Device|DID User Client Device">C1
-                DID User Client Device</dfn></td>
-            <td>The user's device, which runs the dereferencing
-              (<a>P1</a>) and resolution client (<a>P2</a>) processes
-              using client code (<a>D4</a>) as configured by the
-              client administrator (<a>E3</a>) on behalf of the client
-              service provider (<a>E4</a>).</td>
+            <td><dfn data-lt="F1|F1 Manage DID|Manage DID">F1 Manage DID</dfn></td>
+            <td>The interaction where the DID Controller (<a>E1</a>) creates, updates, or deactivates a DID using the DID Controller Process (<a>P1</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#method-operations">Method Operations</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="C2|C2 Resolver Device|Resolver Device">C3
-                Resolver Device</dfn></td>
-            <td>The device running the resolver process (<a>P2</a>)
-              using resolver code (<a>D6</a>) as configured by the
-              resolver administrator (<a>E6</a>) on behalf of the
-              resolver service provider (<a>E7</a>)</td>
+            <td><dfn data-lt="F2|F2 Update VDR State|Update VDR State">F2 Update VDR State</dfn></td>
+            <td>The communication flow from the DID Controller Process (<a>P1</a>) to the Controller VDR Node (<a>P2</a>) to write state changes.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn data-lt="C3|C3 VDR Device|VDR Device">C2 VDR
-                Device</dfn></td>
-            <td>The device running the VDR process (<a>P3</a>) using
-              VDR code (<a>D8</a>) as configured by the VDR
-              administrator (<a>E9</a> on behalf of the VDR service
-              provider
-              (<a>E10</a>)</td>
+            <td><dfn data-lt="F3|F3 Synchronize VDR State|Synchronize VDR State">F3 Synchronize VDR State</dfn></td>
+            <td>The network synchronization flow between VDR nodes (Controller VDR Node (<a>P2</a>) and Resolver VDR Node (<a>P5</a>)) to maintain state consistency across providers.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
           </tr>
           <tr>
-            <td><dfn
-                data-lt="T1|T1 Resolution Trust Boundary|Resolution Trust Boundary">T1
-                Resolution Trust Boundary</dfn></td>
-            <td>The boundary between the resolver client (<a>P1</a>)
-              and the resolver (<a>P2</a>). It is understood that the
-              client process (<a>P1</a>) MUST inherently trust the
-              resolver
-              (<a>P2</a>) which also implies the user (<a>E1</a>)
-              trusts the resolver service provider (<a>E7</a>)</td>
+            <td><dfn data-lt="F4|F4 Give DID URL|Give DID URL">F4 Give DID URL</dfn></td>
+            <td>The channel or mechanism by which the DID URL Author (<a>E3</a>) transmits the DID URL (<a>D4</a>) to the DID URL User (<a>E2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F5|F5 Use DID URL|Use DID URL">F5 Use DID URL</dfn></td>
+            <td>The interaction where the DID URL User (<a>E2</a>) directs the DID-enabled Application (<a>P3</a>) to process a DID URL (<a>D4</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dereferencing">DID URL dereferencing</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F6|F6 Resolve|Resolve">F6 Resolve</dfn></td>
+            <td>The resolution request call made from the DID-enabled Application (<a>P3</a>) to the Resolver (<a>P4</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#resolving">DID resolution</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F7|F7 Read VDR State|Read VDR State">F7 Read VDR State</dfn></td>
+            <td>The query flow from the Resolver (<a>P4</a>) to the Resolver VDR Node (<a>P5</a>) to fetch VDR state required for resolution.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="T1|T1 VDR Trust Boundary|VDR Trust Boundary">T1 VDR Trust Boundary</dfn></td>
+            <td>The boundary between the DID Controller Process (<a>P1</a>) on DID Controller Device (<a>C1</a>) and the Controller VDR Node (<a>P2</a>) on Controller VDR Device (<a>C2</a>), crossed by Update VDR State (<a>F2</a>). Requires trusting the VDR node process, its service provider (Controller VDR Service Provider (<a>E5</a>)), and the underlying VDR infrastructure.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="T2|T2 Resolution Trust Boundary|Resolution Trust Boundary">T2 Resolution Trust Boundary</dfn></td>
+            <td>The boundary between the DID-enabled Application (<a>P3</a>) on DID User Client Device (<a>C3</a>) and the Resolver (<a>P4</a>) on Resolver Device (<a>C4</a>), crossed by Resolve (<a>F6</a>). Requires trusting the resolver software, its configuration, and the Resolver Service Provider (<a>E4</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="T3|T3 DID URL Trust Boundary|DID URL Trust Boundary">T3 DID URL Trust Boundary</dfn></td>
+            <td>The boundary between the DID URL Author (<a>E3</a>) and the DID URL User (<a>E2</a>), crossed by Give DID URL (<a>F4</a>). Requires the user to trust that the DID URL (<a>D4</a>) comes from an authentic source and was transmitted securely.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
           </tr>
         </tbody>
       </table>
