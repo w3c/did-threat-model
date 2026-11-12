@@ -1,0 +1,2550 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="generator" content="ReSpec 37.5.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<style>
+span.example-title{text-transform:none}
+:is(aside,div).example,div.illegal-example{padding:.5em;margin:1em 0;position:relative;clear:both}
+div.illegal-example{color:red}
+div.illegal-example p{color:#000}
+aside.example div.example{border-left-width:.1em;border-color:#999;background:#fff}
+</style>
+<style>
+dfn{cursor:pointer}
+.dfn-panel{position:absolute;z-index:35;min-width:300px;max-width:500px;padding:.5em .75em;margin-top:.6em;font-family:"Helvetica Neue",sans-serif;font-size:small;background:#fff;background:var(--indextable-hover-bg,#fff);color:#000;color:var(--text,#000);box-shadow:0 1em 3em -.4em rgba(0,0,0,.3),0 0 1px 1px rgba(0,0,0,.05);box-shadow:0 1em 3em -.4em var(--tocsidebar-shadow,rgba(0,0,0,.3)),0 0 1px 1px var(--tocsidebar-shadow,rgba(0,0,0,.05));border-radius:2px}
+.dfn-panel:not(.docked)>.caret{position:absolute;top:-9px}
+.dfn-panel:not(.docked)>.caret::after,.dfn-panel:not(.docked)>.caret::before{content:"";position:absolute;border:10px solid transparent;border-top:0;border-bottom:10px solid #fff;border-bottom-color:var(--indextable-hover-bg,#fff);top:0}
+.dfn-panel:not(.docked)>.caret::before{border-bottom:9px solid #a2a9b1;border-bottom-color:var(--indextable-hover-bg,#a2a9b1)}
+.dfn-panel *{margin:0}
+.dfn-panel b{display:block;color:#000;color:var(--text,#000);margin-top:.25em}
+.dfn-panel ul a[href]{color:#333;color:var(--text,#333)}
+.dfn-panel>div{display:flex}
+.dfn-panel a.self-link{font-weight:700;margin-right:auto}
+.dfn-panel .marker{padding:.1em;margin-left:.5em;border-radius:.2em;text-align:center;white-space:nowrap;font-size:90%;color:#040b1c}
+.dfn-panel .marker.dfn-exported{background:#d1edfd;box-shadow:0 0 0 .125em #1ca5f940}
+.dfn-panel .marker.idl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel .marker.cddl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel a:not(:hover){text-decoration:none!important;border-bottom:none!important}
+.dfn-panel a[href]:hover{border-bottom-width:1px}
+.dfn-panel ul{padding:0}
+.dfn-panel li{margin-left:1em}
+.dfn-panel.docked{position:fixed;left:.5em;top:unset;bottom:2em;margin:0 auto;max-width:calc(100vw - .75em * 2 - .5em - .2em * 2);max-height:30vh;overflow:auto}
+</style>
+  
+  
+<title>Decentralized Identifier (DID) Threat Model</title>
+  
+<style id="respec-mainstyle">
+@keyframes pop{
+0%{transform:scale(1,1)}
+25%{transform:scale(1.25,1.25);opacity:.75}
+100%{transform:scale(1,1)}
+}
+a.internalDFN{color:inherit;border-bottom:1px solid #99c;text-decoration:none}
+a.externalDFN{color:inherit;border-bottom:1px dotted #ccc;text-decoration:none}
+a.bibref{text-decoration:none}
+.respec-offending-element:target{animation:pop .25s ease-in-out 0s 1}
+.respec-offending-element,a[href].respec-offending-element{text-decoration:red wavy underline}
+@supports not (text-decoration:red wavy underline){
+.respec-offending-element:not(pre){display:inline-block}
+.respec-offending-element{background:url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x}
+}
+#references :target{background:#eaf3ff;animation:pop .4s ease-in-out 0s 1}
+@media (prefers-color-scheme:dark){
+#references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+}
+body:has(input[name=color-scheme][value=dark]:checked) #references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+cite .bibref{font-style:italic}
+a[href].orcid{padding-left:4px;padding-right:4px}
+a[href].orcid>svg{margin-bottom:-2px}
+ol.tof,ul.tof{list-style:none outside none}
+.caption{margin-top:.5em;font-style:italic}
+#issue-summary>ul{column-count:2}
+#issue-summary li{list-style:none}
+details.respec-tests-details{margin-left:1em;display:inline-block;vertical-align:top}
+details.respec-tests-details>*{padding-right:2em}
+details.respec-tests-details[open]{z-index:999999;position:absolute;border:thin solid #cad3e2;border-radius:.3em;background-color:#fff;padding-bottom:.5em}
+details.respec-tests-details[open]>summary{border-bottom:thin solid #cad3e2;padding-left:1em;margin-bottom:1em;line-height:2em}
+details.respec-tests-details>ul{width:100%;margin-top:-.3em}
+details.respec-tests-details>li{padding-left:1em}
+.self-link:hover{opacity:1;text-decoration:none;background-color:transparent}
+aside.example .marker>a.self-link{color:inherit}
+.header-wrapper{display:flex;align-items:baseline}
+:is(h2,h3,h4,h5,h6):not(:where(#toc>h2,#abstract>h2,#sotd>h2,.head>h2)):has(+a.self-link){position:relative;left:-.5em}
+:is(h2,h3,h4,h5,h6):not(:where(#toch2))+a.self-link{color:inherit;order:-1;position:relative;left:-1.1em;font-size:1rem;opacity:.8;text-decoration:none}
+:is(h2,h3,h4,h5,h6)+a.self-link::before{content:"§"}
+:is(h2,h3)+a.self-link{top:-.2em}
+:is(h2,h3)+a.self-link::before{color:var(--heading-text)}
+@media (max-width:767px){
+dd{margin-left:0}
+}
+@media print{
+.removeOnSave{display:none}
+}
+body:has(input[name=color-scheme][value=light]:checked),head:not(:has(meta[name=color-scheme][content~=dark]))+body{color-scheme:light}
+body:has(input[name=color-scheme][value=dark]:checked){color-scheme:dark}
+</style>
+  
+  
+<link rel="stylesheet" href="threat-model.css">
+
+<meta name="color-scheme" content="light">
+<meta name="description" content="This threat model describes known threats and possible responses for
+      Decentralized Identifiers defined in Decentralized Identifiers (DIDs) v1.1
+      specification at https://www.w3.org/TR/did-1.1/ and Decentralized
+      Identifier Resolution (DID Resolution) v1 defined at
+      https://www.w3.org/TR/did-resolution-1.0/. See these specifications for
+      details.">
+<link rel="canonical" href="https://www.w3.org/TR/did-threat-model/">
+<style>
+.hljs,body:has(input[name=color-scheme][value=light]:checked) .hljs,head:not(:has(meta[name=color-scheme][content~=dark]))+body .hljs{--base:#fafafa;--mono-1:#383a42;--mono-2:#686b77;--mono-3:#717277;--hue-1:#0b76c5;--hue-2:#336ae3;--hue-3:#a626a4;--hue-4:#42803c;--hue-5:#ca4706;--hue-5-2:#c91243;--hue-6:#986801;--hue-6-2:#9a6a01}
+@media (prefers-color-scheme:dark){
+.hljs{
+  --base: #282c34;
+  --mono-1: #abb2bf;
+  --mono-2: #818896;
+  --mono-3: #5c6370;
+  --hue-1: #56b6c2;
+  --hue-2: #61aeee;
+  --hue-3: #c678dd;
+  --hue-4: #98c379;
+  --hue-5: #e06c75;
+  --hue-5-2: #be5046;
+  --hue-6: #d19a66;
+  --hue-6-2: #e6c07b;
+}
+}
+body:has(input[name=color-scheme][value=dark]:checked) .hljs{
+  --base: #282c34;
+  --mono-1: #abb2bf;
+  --mono-2: #818896;
+  --mono-3: #5c6370;
+  --hue-1: #56b6c2;
+  --hue-2: #61aeee;
+  --hue-3: #c678dd;
+  --hue-4: #98c379;
+  --hue-5: #e06c75;
+  --hue-5-2: #be5046;
+  --hue-6: #d19a66;
+  --hue-6-2: #e6c07b;
+}
+.hljs{display:block;overflow-x:auto;padding:.5em;color:#383a42;color:var(--mono-1,#383a42);background:#fafafa;background:var(--base,#fafafa)}
+.hljs-comment,.hljs-quote{color:#717277;color:var(--mono-3,#717277);font-style:italic}
+.hljs-doctag,.hljs-formula,.hljs-keyword{color:#a626a4;color:var(--hue-3,#a626a4)}
+.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#ca4706;color:var(--hue-5,#ca4706);font-weight:700}
+.hljs-literal{color:#0b76c5;color:var(--hue-1,#0b76c5)}
+.hljs-addition,.hljs-attribute,.hljs-meta-string,.hljs-regexp,.hljs-string{color:#42803c;color:var(--hue-4,#42803c)}
+.hljs-built_in,.hljs-class .hljs-title{color:#9a6a01;color:var(--hue-6-2,#9a6a01)}
+.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#986801;color:var(--hue-6,#986801)}
+.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#336ae3;color:var(--hue-2,#336ae3)}
+.hljs-emphasis{font-style:italic}
+.hljs-strong{font-weight:700}
+.hljs-link{text-decoration:underline}
+</style>
+<style>
+var:hover{text-decoration:underline;cursor:pointer}
+var.respec-hl{color:var(--color,#000);background-color:var(--bg-color);box-shadow:0 0 0 2px var(--bg-color)}
+@media (prefers-color-scheme:dark){
+var.respec-hl{filter:saturate(.9) brightness(.9)}
+}
+var.respec-hl-c1{--bg-color:#f4d200}
+var.respec-hl-c2{--bg-color:#ff87a2}
+var.respec-hl-c3{--bg-color:#96e885}
+var.respec-hl-c4{--bg-color:#3eeed2}
+var.respec-hl-c5{--bg-color:#eacfb6}
+var.respec-hl-c6{--bg-color:#82ddff}
+var.respec-hl-c7{--bg-color:#ffbcf2}
+@media print{
+var.respec-hl{background:0 0;color:#000;box-shadow:unset}
+}
+</style>
+<style>
+var[data-type]{position:relative}
+var[data-type]::after,var[data-type]::before{position:absolute;left:50%;top:-6px;opacity:0;transition:opacity .4s;pointer-events:none}
+var[data-type]::before{content:"";transform:translateX(-50%);border-width:4px 6px 0 6px;border-style:solid;border-color:transparent;border-top-color:#222}
+var[data-type]::after{content:attr(data-type);transform:translateX(-50%) translateY(-100%);background:#222;text-align:center;font-family:"Dank Mono","Fira Code",monospace;font-style:normal;padding:6px;border-radius:3px;color:#daca88;text-indent:0;font-weight:400}
+var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
+</style>
+<script id="initialUserConfig" type="application/json">{
+  "group": "did",
+  "wgPublicList": "public-did-wg",
+  "specStatus": "DNOTE",
+  "shortName": "did-threat-model",
+  "editors": [
+    {
+      "name": "Joe Andrieu",
+      "url": "https://www.linkedin.com/in/joe-andrieu/",
+      "company": "Legendary Requirements",
+      "companyURL": "http://legreq.com",
+      "w3cid": 97261
+    },
+    {
+      "name": "Steve McCown",
+      "url": "https://www.linkedin.com/in/mccown/",
+      "company": "Anonyome Labs",
+      "companyURL": "https://anonyome.com",
+      "w3cid": 139631
+    }
+  ],
+  "github": {
+    "repoURL": "https://github.com/w3c/did-threat-model",
+    "branch": "main"
+  },
+  "edDraftURI": "https://w3c.github.io/did-threat-model",
+  "noRecTrack": "true",
+  "maxTocLevel": 4,
+  "publishDate": "2026-11-26",
+  "publishISODate": "2026-11-26T00:00:00.000Z",
+  "generatedSubtitle": "W3C Group Note Draft 26 November 2026"
+}</script>
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-DNOTE">
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/dark.css" disabled=""></head>
+
+<body class="h-entry informative"><div class="head">
+    <p class="logos"><a class="logo" href="https://www.w3.org/"><img crossorigin="" alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72">
+  </a></p>
+    <h1 id="title" class="title">Decentralized Identifier (DID) Threat Model</h1> 
+    <p id="w3c-state"><a href="https://www.w3.org/standards/types#DNOTE">W3C Group Note Draft</a> <time class="dt-published" datetime="2026-11-26">26 November 2026</time></p>
+    <details open="">
+      <summary>More details about this document</summary>
+      <dl>
+        <dt>This version:</dt><dd>
+                  <a class="u-url" href="https://www.w3.org/TR/2026/DNOTE-did-threat-model-20261126/">https://www.w3.org/TR/2026/DNOTE-did-threat-model-20261126/</a>
+                </dd>
+        <dt>Latest published version:</dt><dd>
+                  <a href="https://www.w3.org/TR/did-threat-model/">https://www.w3.org/TR/did-threat-model/</a>
+                </dd>
+        <dt>Latest editor's draft:</dt><dd><a href="https://w3c.github.io/did-threat-model">https://w3c.github.io/did-threat-model</a></dd>
+        <dt>History:</dt><dd>
+                        <a href="https://www.w3.org/standards/history/did-threat-model/">https://www.w3.org/standards/history/did-threat-model/</a>
+                      </dd><dd>
+                        <a href="https://github.com/w3c/did-threat-model/commits/main">Commit history</a>
+                      </dd>
+        
+        
+        
+        
+        
+        <dt>
+                  Editors:
+                </dt><dd class="editor p-author h-card vcard" data-editor-id="97261">
+    <a class="u-url url p-name fn" href="https://www.linkedin.com/in/joe-andrieu/">Joe Andrieu</a> (<a class="p-org org h-org" href="http://legreq.com">Legendary Requirements</a>)
+  </dd><dd class="editor p-author h-card vcard" data-editor-id="139631">
+    <a class="u-url url p-name fn" href="https://www.linkedin.com/in/mccown/">Steve McCown</a> (<a class="p-org org h-org" href="https://anonyome.com">Anonyome Labs</a>)
+  </dd>
+        
+        
+        <dt>Feedback:</dt><dd>
+        <a href="https://github.com/w3c/did-threat-model/">GitHub w3c/did-threat-model</a>
+        (<a href="https://github.com/w3c/did-threat-model/pulls/">pull requests</a>,
+        <a href="https://github.com/w3c/did-threat-model/issues/new/choose">new issue</a>,
+        <a href="https://github.com/w3c/did-threat-model/issues/">open issues</a>)
+      </dd><dd><a href="mailto:public-did-wg@w3.org?subject=%5Bdid-threat-model%5D%20YOUR%20TOPIC%20HERE">public-did-wg@w3.org</a> with subject line <kbd>[did-threat-model] <em>… message topic …</em></kbd> (<a rel="discussion" href="https://lists.w3.org/Archives/Public/public-did-wg">archives</a>)</dd>
+        
+        
+      </dl>
+    </details>
+    
+    
+    <p class="copyright">
+    <a href="https://www.w3.org/policies/#copyright">Copyright</a>
+    ©
+    2026
+    
+    <a href="https://www.w3.org/">World Wide Web Consortium</a>.
+    <abbr title="World Wide Web Consortium">W3C</abbr><sup>®</sup>
+    <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>,
+    <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and
+    <a rel="license" href="https://www.w3.org/copyright/software-license-2023/" title="W3C Software and Document Notice and License">permissive document license</a> rules apply.
+  </p>
+    <hr title="Separator for header">
+  </div>
+  <section id="abstract" class="introductory"><h2>Abstract</h2>
+    <p>
+      This threat model describes known threats and possible responses for
+      Decentralized Identifiers defined in Decentralized Identifiers (DIDs) v1.1
+      specification at <a href="https://www.w3.org/TR/did-1.1/">https://www.w3.org/TR/did-1.1/</a> and Decentralized
+      Identifier Resolution (DID Resolution) v1 defined at
+      <a href="https://www.w3.org/TR/did-resolution-1.0/">https://www.w3.org/TR/did-resolution-1.0/</a>. See these specifications for
+      details. 
+    </p>
+  </section>
+  <section id="sotd" class="introductory"><h2>Status of This Document</h2><p><em>This section describes the status of this
+      document at the time of its publication. A list of current <abbr title="World Wide Web Consortium">W3C</abbr>
+      publications and the latest revision of this technical report can be found
+      in the
+      <a href="https://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> standards and drafts index</a>.</em></p>
+    <section id="status-of-this-document"><div class="header-wrapper"><h3 id="status-of-this-document-0">Status of this Document</h3><a class="self-link" href="#status-of-this-document" aria-label="Permalink for this Section"></a></div>
+    <p>This is a draft of a new NOTE-track publication from
+      the Decentralized Identifier Working Group (DIDWG).</p>
+  <p>
+    This document was published by the <a href="https://www.w3.org/groups/wg/did">Decentralized Identifier Working Group</a> as
+    a Group Note Draft using the
+        <a href="https://www.w3.org/policies/process/20250818/#recs-and-notes">Note
+          track</a>. 
+  </p><p>Group Note Drafts are not endorsed by
+        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members. </p><p>
+    This is a draft document and may be updated, replaced, or obsoleted by other
+    documents at any time. It is inappropriate to cite this document as other
+    than a work in progress.
+    
+  </p><p data-deliverer="117488">
+    
+        The
+        <a href="https://www.w3.org/policies/patent-policy/"><abbr title="World Wide Web Consortium">W3C</abbr> Patent
+          Policy</a>
+        does not carry any licensing requirements or commitments on this
+        document.
+      
+    
+  </p><p>
+                          This document is governed by the
+                          <a id="w3c_process_revision" href="https://www.w3.org/policies/process/20250818/">18 August 2025 <abbr title="World Wide Web Consortium">W3C</abbr> Process Document</a>.
+                        </p></section></section><nav id="toc"><h2 class="introductory" id="table-of-contents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Abstract</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status of This Document</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#status-of-this-document">Status of this Document</a></li></ol></li><li class="tocline"><a class="tocxref" href="#Introduction"><bdi class="secno">1. </bdi>Introduction</a></li><li class="tocline"><a class="tocxref" href="#architecture"><bdi class="secno">2. </bdi>Architecture</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#diagram"><bdi class="secno">2.1 </bdi>Diagram</a></li><li class="tocline"><a class="tocxref" href="#description"><bdi class="secno">2.2 </bdi>Description</a></li><li class="tocline"><a class="tocxref" href="#architecture-dictionary"><bdi class="secno">2.3 </bdi>Dictionary</a></li></ol></li><li class="tocline"><a class="tocxref" href="#stakeholders"><bdi class="secno">3. </bdi>Stakeholders</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#e1-did-controller"><bdi class="secno">3.1 </bdi>E1 DID Controller</a></li><li class="tocline"><a class="tocxref" href="#e2-did-url-user"><bdi class="secno">3.2 </bdi>E2 DID URL User</a></li><li class="tocline"><a class="tocxref" href="#e3-did-url-author"><bdi class="secno">3.3 </bdi>E3 DID URL Author</a></li><li class="tocline"><a class="tocxref" href="#e4-resolver-service-provider"><bdi class="secno">3.4 </bdi>E4 Resolver Service Provider</a></li><li class="tocline"><a class="tocxref" href="#e5-controller-vdr-service-provider-and-e6-resolver-vdr-service-provider"><bdi class="secno">3.5 </bdi>E5 Controller VDR Service Provider and E6 Resolver VDR Service
+        Provider</a></li></ol></li><li class="tocline"><a class="tocxref" href="#threats"><bdi class="secno">4. </bdi>Threats</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#threat-toc"><bdi class="secno">4.1 </bdi>Threat List</a></li><li class="tocline"><a class="tocxref" href="#threat-details"><bdi class="secno">4.2 </bdi>Threat Details</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#t1-eavesdropping-by-a-did-resolution-service-provider"><bdi class="secno">4.2.1 </bdi>T1. Eavesdropping by a DID Resolution Service Provider</a></li><li class="tocline"><a class="tocxref" href="#t2-surveillance-by-proxy"><bdi class="secno">4.2.2 </bdi>T2. Surveillance by Proxy</a></li><li class="tocline"><a class="tocxref" href="#t3-tampering-by-proxy"><bdi class="secno">4.2.3 </bdi>T3. Tampering by Proxy</a></li><li class="tocline"><a class="tocxref" href="#t4-dos-by-proxy"><bdi class="secno">4.2.4 </bdi>T4. DOS by Proxy</a></li><li class="tocline"><a class="tocxref" href="#t5-repudiation-by-proxying-resolver"><bdi class="secno">4.2.5 </bdi>T5. Repudiation by Proxying Resolver</a></li><li class="tocline"><a class="tocxref" href="#t6-correlation-by-overuse-(supercookie)"><bdi class="secno">4.2.6 </bdi>T6. Correlation by Overuse (Supercookie)</a></li><li class="tocline"><a class="tocxref" href="#t7-correlation-by-data-exchange"><bdi class="secno">4.2.7 </bdi>T7. Correlation by Data Exchange</a></li><li class="tocline"><a class="tocxref" href="#t8-spoofing-after-trust-on-first-use"><bdi class="secno">4.2.8 </bdi>T8. Spoofing after Trust on First Use</a></li></ol></li></ol></li><li class="tocline"><a class="tocxref" href="#contributing"><bdi class="secno">5. </bdi>Contributing</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#adding-a-threat"><bdi class="secno">5.1 </bdi>Adding a threat</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#a-good-name"><bdi class="secno">5.1.1 </bdi>A good name</a></li><li class="tocline"><a class="tocxref" href="#a-unique-id"><bdi class="secno">5.1.2 </bdi>A unique ID</a></li><li class="tocline"><a class="tocxref" href="#a-description"><bdi class="secno">5.1.3 </bdi>A description</a></li><li class="tocline"><a class="tocxref" href="#one-or-more-responses"><bdi class="secno">5.1.4 </bdi>One or more responses</a></li><li class="tocline"><a class="tocxref" href="#list-of-affected-elements"><bdi class="secno">5.1.5 </bdi>List of affected elements</a></li><li class="tocline"><a class="tocxref" href="#the-threat-taxonomy"><bdi class="secno">5.1.6 </bdi>The threat taxonomy</a></li><li class="tocline"><a class="tocxref" href="#the-threat-class"><bdi class="secno">5.1.7 </bdi>The threat class</a></li></ol></li><li class="tocline"><a class="tocxref" href="#adding-to-this-repo"><bdi class="secno">5.2 </bdi>Adding to this repo</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#create-a-threat-file"><bdi class="secno">5.2.1 </bdi>Create a threat file</a></li><li class="tocline"><a class="tocxref" href="#give-the-file-a-good-name"><bdi class="secno">5.2.2 </bdi>Give the file a good name</a></li><li class="tocline"><a class="tocxref" href="#add-javascript-element"><bdi class="secno">5.2.3 </bdi>Add javascript element</a></li><li class="tocline"><a class="tocxref" href="#add-threat-to-outline"><bdi class="secno">5.2.4 </bdi>Add threat to outline</a></li><li class="tocline"><a class="tocxref" href="#test-submit"><bdi class="secno">5.2.5 </bdi>Test &amp; Submit</a></li></ol></li></ol></li></ol></nav>
+  <section id="Introduction"><div class="header-wrapper"><h2 id="x1-introduction"><bdi class="secno">1. </bdi>Introduction</h2><a class="self-link" href="#Introduction" aria-label="Permalink for Section 1."></a></div>
+    
+    <p>
+      Decentralized identifiers (DIDs) enable verifiable, decentralized
+      digital identity.
+    </p>
+    <p>
+      In contrast to typical federated identifiers, DIDs have been designed
+      so that they may be decoupled from centralized registries, identity
+      providers, and certificate authorities. DIDs are URLs that associate a
+      DID subject with a DID document allowing trustable interactions
+      associated with that subject.
+    </p>
+    <div class="example" id="example-1">
+        <div class="marker">
+    <a class="self-link" href="#example-1">Example<bdi> 1</bdi></a>
+  </div> <pre aria-busy="false"><code class="hljs">did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK</code></pre>
+      </div>
+    <p>
+      DID Resolution is the process of retrieving the canonical DID document
+      from the associated Verifiable Data Registry as defined by the DID's
+      method. Each DID document can express cryptographic material as
+      verification methods—enabling a party to prove use of secret
+      cryptographic material for particular verification actions like
+      authentication, authorization, and encryption—and services,
+      which  enable trusted interactions associated with the DID subject.
+    </p>
+    <p>
+      One can add parameters to a DID, creating a DID URL for identifying
+      specific resources other than the DID document. DID URLs are a DID with
+      optional additional path, query, or fragment part. Dereferencing a DID
+      URL, uses the result from resolving the DID in the DID URL to invoke a
+      handler that applies the DID URL in the current context, such as
+      evaluating a proof or sending a DIDComm message. Dereferencing a DID URL
+      that has no additional parameters returns the DID document.
+    </p>
+    <div class="example" id="example-2">
+        <div class="marker">
+    <a class="self-link" href="#example-2">Example<bdi> 2</bdi></a>
+  </div> <pre aria-busy="false"><code class="hljs">did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK#key-1</code></pre>
+      </div>
+    <div class="example" id="example-3">
+        <div class="marker">
+    <a class="self-link" href="#example-3">Example<bdi> 3</bdi></a>
+  </div> <pre aria-busy="false"><code class="hljs">did:example:123456789abcdefghi/images/avatar.png</code></pre>
+      </div>
+    <p>
+      A discussion of use cases can be found in the <a href="https://www.w3.org/TR/did-use-cases/"><abbr title="World Wide Web Consortium">W3C</abbr>'s Use Cases and
+        Requirements for Decentralized Identifiers</a>.
+    </p>
+  </section>
+
+  <section id="architecture"><div class="header-wrapper"><h2 id="x2-architecture"><bdi class="secno">2. </bdi>Architecture</h2><a class="self-link" href="#architecture" aria-label="Permalink for Section 2."></a></div>
+    
+    <p>
+      DIDs and DID Resolution are realized by four key software components,
+      each typically running on separate devices under the control over
+      different parties, although different configurations may deploy these
+      components differently.
+    </p>
+    <p>
+      The four primary software components used with DIDs are a DID
+      controller application, a DID-enabled application, a resolver, and a
+      Verifiable Data Registry (VDR) node. Since DIDs were built to enable
+      decentralized data registries, it is understood that the VDR node
+      accessed by a controller may be different than the node accessed by the
+      resolver.
+    </p>
+    <section id="diagram"><div class="header-wrapper"><h3 id="x2-1-diagram"><bdi class="secno">2.1 </bdi>Diagram</h3><a class="self-link" href="#diagram" aria-label="Permalink for Section 2.1"></a></div>
+      
+      <img src="diagrams/did-dfd.svg" alt="DID Architecture Diagram, described next">
+    </section>
+    <section id="description"><div class="header-wrapper"><h3 id="x2-2-description"><bdi class="secno">2.2 </bdi>Description</h3><a class="self-link" href="#description" aria-label="Permalink for Section 2.2"></a></div>
+      
+      <p>
+        The DID controller (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-1">E1</a>) manages the DID (<a href="#dfn-d1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d1-1">D1</a>), by creating,
+        updating, and deactivating the DID as desired (<a href="#dfn-f1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f1-1">F1</a>), using a DID
+        Controller application (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-1">P1</a>) running on a DID Controller Device
+        (<a href="#dfn-c1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c1-1">C1</a>) with access to its local DID Controller Data Store
+        (<a href="#dfn-d2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d2-1">D2</a>). The user manages the DID, the DID Controller application
+        (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-2">P1</a>) updates the VDR State by communicating (<a href="#dfn-f2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f2-1">F2</a>) with its
+        preferred VDR Node (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-1">P2</a>) which has access to its local data store
+        (<a href="#dfn-d3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d3-1">D3</a>) which is kept in sync (<a href="#dfn-f3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f3-1">F3</a>) with other VDR nodes. Each
+        VDR node (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-1">P3</a>, <a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-1">P5</a>) is understood to be running on its own
+        device (<a href="#dfn-c2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c2-1">C2</a>, <a href="#dfn-c5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c5-1">C5</a>) under control of potentially different
+        service providers (<a href="#dfn-e5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e5-1">E5</a>, <a href="#dfn-e6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e6-1">E6</a>).
+      </p>
+      <p>
+        How the DID is managed (<a href="#dfn-f1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f1-2">F1</a>), how the VDR state is updated
+        (<a href="#dfn-f2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f2-2">F2</a>) and how the VDR maintains synchronization (<a href="#dfn-f3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f3-2">F3</a>) is
+        DID-method specific and outside the scope of the specifications under
+        analysis. Please see the method specification and any associated threat
+        models for further details.
+      </p>
+      <p>
+        Resolution begins with a DID URL (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-1">D4</a>) created by some DID URL
+        Author (<a href="#dfn-e3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e3-1">E3</a>) and given to them through some means (<a href="#dfn-f4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f4-1">F4</a>) and
+        given to a DID-enabled application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-2">P3</a>) by a DID URL User
+        (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-1">E2</a>) to achieve some user-directed purpose. The author may be
+        the issuer of a verifiable credential who used a DID to sign a
+        credential provided by a VC holder to a VC verifier (see the Verifiable
+        Credentials specification), the author of an email containing a DID
+        URL, or a presenter at a conference, presenting a DID on-screen. How
+        the DID is given (<a href="#dfn-f4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f4-2">F4</a>) and used (<a href="#dfn-f5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f5-1">F5</a>) are both out of scope
+        for these specifications, but in scope for this threat model.
+      </p>
+      <p>
+        Once the DID-enabled application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-3">P3</a>) has a DID URL with
+        direction from the user to use that DID URL for a specific purpose, it
+        executes the appropriate business logic to manage DID resolution and
+        apply the result to use the DID as directed by the user. For example,
+        if the application has been directed to verify the proof on a
+        verifiable credential, it would use the result from resolution to do
+        that task.
+      </p>
+      <p>
+        For resolution, the DID-enabled application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-4">P3</a>) connects to a
+        DID Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-1">P4</a>) to resolve the DID in the DID URL, then uses
+        that result as directed by the user. The resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-2">P4</a>) queries
+        the VDR state (<a href="#dfn-f7" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f7-1">F7</a>) from its chosen VDR node (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-2">P5</a>). The
+        result of resolution is a DID document (<a href="#dfn-d8" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d8-1">D8</a>), DID document
+        metadata (<a href="#dfn-d9" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d9-1">D9</a>), and any DID resolution metadata (<a href="#dfn-d10" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d10-1">D10</a>).
+      </p>
+      <p>
+        It is also worth noting that there are three major trust boundaries
+        that must be crossed. First, one must trust (<a href="#dfn-t1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t1-1">T1</a>) the VDR and the
+        software and services used to access the VDR for managing the state of
+        the VDR. Updating (<a href="#dfn-f2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f2-3">F2</a>), reading (<a href="#dfn-f7" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f7-2">F7</a>), and synchronizing
+        the VDR state (<a href="#dfn-f3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f3-3">F3</a>) requires trusting the process called, as
+        well as the service provider hosting the VDR node and the VDR itself.
+        For example, for a Bitcoin-based DID method, you must trust the
+        software updating the VDR, the service providers they connect to for
+        reading and writing to the blockchain, and the innate guarantees of
+        Bitcoin as a distributed system. In other words, the VDR must be
+        trustworthy.
+      </p>
+      <p>
+        Second, one must trust (<a href="#dfn-t2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t2-1">T2</a>) the resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-3">P4</a>) called when
+        resolving a particular DID, including all of its back-end processing,
+        such as how it reads from the VDR. If your deployment runs its own VDR
+        node for resolution (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-3">P5</a>), the trust is with your own ability to
+        operate those services correctly including understanding the resolver
+        code and its configuration. If you rely on another party for
+        resolution, you must trust that they are doing the job correctly,
+        including whatever back-end services they might be using.
+      </p>
+      <p>
+        Third, the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-2">E2</a>) must trust (<a href="#dfn-t3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t3-1">T3</a>) the DID URL
+        (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-2">D4</a>) provided by the DID URL Author (<a href="#dfn-e3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e3-2">E3</a>), as well as the
+        transport mechanism that got the DID URL to the DID URL User, as there
+        is no mechanism for verifying, on its own, whether or not the DID URL
+        is legitimate. Other means should be used to verify that the DID URL is
+        from a trustable source and communicated in a trustable manner. For
+        example, DIDs in a Verifiable Credential, can be trusted if the issuer
+        and securing mechanisms are trusted. DID URLs received by email or
+        relayed by a stranger may be dangerous.
+      </p>
+      <p>
+        It is worth noting that conformant DID-enabled applications must allow
+        the DID URL user (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-3">E2</a>) to specify which resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-4">P4</a>) to
+        use for any particular DID method [link to spec]. This trust decision
+        is under the control of the DID URL User because the result from the
+        resolver (<a href="#dfn-d8" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d8-2">D8</a>, <a href="#dfn-d9" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d9-2">D9</a>, and <a href="#dfn-d10" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d10-2">D10</a>) is
+        <strong><em>necessarily</em></strong> taken as authoritative for those
+        artifacts, including the cryptographic material that secures DID
+        interactions. Regardless of the complexity of the resolver and VDR
+        systems, the DID user chooses the resolvers they trust, making this an
+        unavoidable <em>build vs. buy</em> decision.
+      </p>
+    </section>
+
+    <section id="architecture-dictionary"><div class="header-wrapper"><h3 id="x2-3-dictionary"><bdi class="secno">2.3 </bdi>Dictionary</h3><a class="self-link" href="#architecture-dictionary" aria-label="Permalink for Section 2.3"></a></div>
+      
+      <style>
+
+        table.dictionary,
+        table.dictionary th,
+        table.dictionary td {
+          border: thin solid rgb(176, 176, 176);
+          border-collapse: collapse;
+          padding: 5px;
+        }
+
+        table.dictionary td.left {
+          width: 12em;
+        }
+      
+</style>
+      <table class="dictionary">
+        <tbody>
+          <tr>
+            <td class="left"><dfn data-lt="E1|E1 DID Controller|DID Controller" id="dfn-e1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E1 DID Controller</dfn></td>
+            <td>The entity that manages the DID (<a href="#dfn-d1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d1-2">D1</a>) by creating, updating, and deactivating it as desired.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="E2|E2 DID URL User|DID URL User" id="dfn-e2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E2 DID URL User</dfn></td>
+            <td>The end user who uses a DID URL (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-3">D4</a>) through a DID-enabled Application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-5">P3</a>) to accomplish a specific purpose.
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-did-url-user">DID URL User</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="E3|E3 DID URL Author|DID URL Author" id="dfn-e3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E3 DID URL Author</dfn></td>
+            <td>The entity (e.g., a Verifiable Credential issuer or document creator) who constructs a DID URL (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-4">D4</a>) and provides it to the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-4">E2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="E4|E4 Resolver Service Provider|Resolver Service Provider" id="dfn-e4" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E4 Resolver Service Provider</dfn></td>
+            <td>The party or organization operating or legally responsible for the Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-5">P4</a>) on the Resolver Device (<a href="#dfn-c4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c4-1">C4</a>), including its configuration and any back-end services it relies on.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="E5|E5 Controller VDR Service Provider|Controller VDR Service Provider" id="dfn-e5" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E5 Controller VDR Service Provider</dfn></td>
+            <td>The party or organization operating or legally responsible for the Controller VDR Node (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-2">P2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="E6|E6 Resolver VDR Service Provider|Resolver VDR Service Provider" id="dfn-e6" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E6 Resolver VDR Service Provider</dfn></td>
+            <td>The party or organization operating or legally responsible for the Resolver VDR Node (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-4">P5</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="C1|C1 DID Controller Device|DID Controller Device" id="dfn-c1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C1 DID Controller Device</dfn></td>
+            <td>The device under control of the DID Controller (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-2">E1</a>) that runs the DID Controller Process (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-3">P1</a>) and holds its local data store, DID Controller Data Store (<a href="#dfn-d2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d2-2">D2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="C2|C2 Controller VDR Device|Controller VDR Device" id="dfn-c2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C2 Controller VDR Device</dfn></td>
+            <td>The device hosting the Controller VDR Node (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-3">P2</a>) and its local VDR data store, Controller VDR Data Store (<a href="#dfn-d3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d3-2">D3</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="C3|C3 DID User Client Device|DID User Client Device" id="dfn-c3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C3 DID User Client Device</dfn></td>
+            <td>The client device operated by the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-5">E2</a>) that runs the DID-enabled Application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-6">P3</a>) and client data store, Client Data Store (<a href="#dfn-d5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d5-1">D5</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-client">client</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="C4|C4 Resolver Device|Resolver Device" id="dfn-c4" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C4 Resolver Device</dfn></td>
+            <td>The device hosting and executing the Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-6">P4</a>) process and its local data, Resolver Local Data (<a href="#dfn-d6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d6-1">D6</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="C5|C5 Resolver VDR Device|Resolver VDR Device" id="dfn-c5" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C5 Resolver VDR Device</dfn></td>
+            <td>The device hosting the Resolver VDR Node (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-5">P5</a>) and its associated VDR data store, Resolver VDR Data Store (<a href="#dfn-d7" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d7-1">D7</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="P1|P1 DID Controller Process|DID Controller Process" id="dfn-p1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P1 DID Controller Process</dfn></td>
+            <td>The application running on the DID Controller Device (<a href="#dfn-c1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c1-2">C1</a>) used by the DID Controller (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-3">E1</a>) to manage the DID and submit state updates.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="P2|P2 Controller VDR Node|Controller VDR Node" id="dfn-p2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P2 Controller VDR Node</dfn></td>
+            <td>The Verifiable Data Registry node process that accepts updates from the DID Controller Process (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-4">P1</a>) and keeps data synchronized.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="P3|P3 DID-enabled Application|DID-enabled Application" id="dfn-p3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P3 DID-enabled Application</dfn></td>
+            <td>The client application running on the DID User Client Device (<a href="#dfn-c3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c3-1">C3</a>) that executes business logic, initiates resolution via Resolve (<a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-1">F6</a>), and applies the result.
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-did-enabled-application">DID-enabled application</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="P4|P4 Resolver|Resolver" id="dfn-p4" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P4 Resolver</dfn></td>
+            <td>The software process on the Resolver Device (<a href="#dfn-c4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c4-2">C4</a>) that executes DID resolution by querying VDR state via Read VDR State (<a href="#dfn-f7" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f7-3">F7</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="P5|P5 Resolver VDR Node|Resolver VDR Node" id="dfn-p5" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P5 Resolver VDR Node</dfn></td>
+            <td>The VDR node process queried by the Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-7">P4</a>) to read state data required for resolution.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D1|D1 DID|DID" id="dfn-d1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D1 DID</dfn></td>
+            <td>The Decentralized Identifier managed by the DID Controller (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-4">E1</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-decentralized-identifiers">decentralized identifier (DID)</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D2|D2 DID Controller Data Store|DID Controller Data Store" id="dfn-d2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D2 DID Controller Data Store</dfn></td>
+            <td>The local data store on the DID Controller Device (<a href="#dfn-c1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c1-3">C1</a>) accessible to the DID Controller Process (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-5">P1</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-controllers">DID controller</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D3|D3 Controller VDR Data Store|Controller VDR Data Store" id="dfn-d3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D3 Controller VDR Data Store</dfn></td>
+            <td>The data store maintained by the Controller VDR Node (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-4">P2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D4|D4 DID URL|DID URL" id="dfn-d4" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D4 DID URL</dfn></td>
+            <td>The DID URL (containing a DID with optional path, query, or fragment) created by the DID URL Author (<a href="#dfn-e3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e3-3">E3</a>) and passed to the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-6">E2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D5|D5 Client Data Store|Client Data Store" id="dfn-d5" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D5 Client Data Store</dfn></td>
+            <td>The local data store on the DID User Client Device (<a href="#dfn-c3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c3-2">C3</a>) accessible to the DID-enabled Application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-7">P3</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dfn-client">client</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D6|D6 Resolver Local Data|Resolver Local Data" id="dfn-d6" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D6 Resolver Local Data</dfn></td>
+            <td>Data stored on the Resolver Device (<a href="#dfn-c4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c4-3">C4</a>) used by the Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-8">P4</a>) process.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D7|D7 Resolver VDR Data Store|Resolver VDR Data Store" id="dfn-d7" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D7 Resolver VDR Data Store</dfn></td>
+            <td>The data store maintained by the Resolver VDR Node (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-6">P5</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D8|D8 DID Document|DID Document" id="dfn-d8" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D8 DID Document</dfn></td>
+            <td>The canonical DID document returned as the primary result of DID resolution.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-documents">DID document</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D9|D9 DID Document Metadata|DID Document Metadata" id="dfn-d9" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D9 DID Document Metadata</dfn></td>
+            <td>Metadata describing the resolved DID Document (<a href="#dfn-d8" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d8-3">D8</a>) (e.g., timestamps, version ID).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#did-document-metadata">DID Document Metadata</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="D10|D10 DID Resolution Metadata|DID Resolution Metadata" id="dfn-d10" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">D10 DID Resolution Metadata</dfn></td>
+            <td>Metadata describing the resolution process itself (e.g., content type, error codes).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#did-resolution-metadata">DID Resolution Metadata</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F1|F1 Manage DID|Manage DID" id="dfn-f1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F1 Manage DID</dfn></td>
+            <td>The interaction where the DID Controller (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-5">E1</a>) creates, updates, or deactivates a DID using the DID Controller Process (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-6">P1</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#method-operations">Method Operations</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F2|F2 Update VDR State|Update VDR State" id="dfn-f2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F2 Update VDR State</dfn></td>
+            <td>The communication flow from the DID Controller Process (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-7">P1</a>) to the Controller VDR Node (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-5">P2</a>) to write state changes.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F3|F3 Synchronize VDR State|Synchronize VDR State" id="dfn-f3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F3 Synchronize VDR State</dfn></td>
+            <td>The network synchronization flow between VDR nodes (Controller VDR Node (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-6">P2</a>) and Resolver VDR Node (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-7">P5</a>)) to maintain state consistency across providers.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F4|F4 Give DID URL|Give DID URL" id="dfn-f4" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F4 Give DID URL</dfn></td>
+            <td>The channel or mechanism by which the DID URL Author (<a href="#dfn-e3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e3-4">E3</a>) transmits the DID URL (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-5">D4</a>) to the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-7">E2</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F5|F5 Use DID URL|Use DID URL" id="dfn-f5" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F5 Use DID URL</dfn></td>
+            <td>The interaction where the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-8">E2</a>) directs the DID-enabled Application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-8">P3</a>) to process a DID URL (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-6">D4</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#dereferencing">DID URL dereferencing</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F6|F6 Resolve|Resolve" id="dfn-f6" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F6 Resolve</dfn></td>
+            <td>The resolution request call made from the DID-enabled Application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-9">P3</a>) to the Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-9">P4</a>).
+              (<a href="https://www.w3.org/TR/did-resolution-1.0/#resolving">DID resolution</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="F7|F7 Read VDR State|Read VDR State" id="dfn-f7" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F7 Read VDR State</dfn></td>
+            <td>The query flow from the Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-10">P4</a>) to the Resolver VDR Node (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-8">P5</a>) to fetch VDR state required for resolution.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="T1|T1 VDR Trust Boundary|VDR Trust Boundary" id="dfn-t1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">T1 VDR Trust Boundary</dfn></td>
+            <td>The boundary between the DID Controller Process (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-8">P1</a>) on DID Controller Device (<a href="#dfn-c1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c1-4">C1</a>) and the Controller VDR Node (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-7">P2</a>) on Controller VDR Device (<a href="#dfn-c2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c2-2">C2</a>), crossed by Update VDR State (<a href="#dfn-f2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f2-4">F2</a>). Requires trusting the VDR node process, its service provider (Controller VDR Service Provider (<a href="#dfn-e5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e5-2">E5</a>)), and the underlying VDR infrastructure.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-verifiable-data-registry">verifiable data registry</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="T2|T2 Resolution Trust Boundary|Resolution Trust Boundary" id="dfn-t2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">T2 Resolution Trust Boundary</dfn></td>
+            <td>The boundary between the DID-enabled Application (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-10">P3</a>) on DID User Client Device (<a href="#dfn-c3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c3-3">C3</a>) and the Resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-11">P4</a>) on Resolver Device (<a href="#dfn-c4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c4-4">C4</a>), crossed by Resolve (<a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-2">F6</a>). Requires trusting the resolver software, its configuration, and the Resolver Service Provider (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-1">E4</a>).
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-resolvers">DID resolver</a>)</td>
+          </tr>
+          <tr>
+            <td><dfn data-lt="T3|T3 DID URL Trust Boundary|DID URL Trust Boundary" id="dfn-t3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">T3 DID URL Trust Boundary</dfn></td>
+            <td>The boundary between the DID URL Author (<a href="#dfn-e3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e3-5">E3</a>) and the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-9">E2</a>), crossed by Give DID URL (<a href="#dfn-f4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f4-3">F4</a>). Requires the user to trust that the DID URL (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-7">D4</a>) comes from an authentic source and was transmitted securely.
+              (<a href="https://www.w3.org/TR/did-1.1/#dfn-did-urls">DID URL</a>)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+  <section id="stakeholders"><div class="header-wrapper"><h2 id="x3-stakeholders"><bdi class="secno">3. </bdi>Stakeholders</h2><a class="self-link" href="#stakeholders" aria-label="Permalink for Section 3."></a></div>
+    
+    <section id="e1-did-controller"><div class="header-wrapper"><h3 id="x3-1-e1-did-controller"><bdi class="secno">3.1 </bdi>E1 DID Controller</h3><a class="self-link" href="#e1-did-controller" aria-label="Permalink for Section 3.1"></a></div>
+      
+      <p>
+        The DID Controller (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-6">E1</a>) creates, updates, and deactivates their
+        DID (<a href="#dfn-d1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d1-3">D1</a>) using a DID Controller Application (<a href="#dfn-p1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p1-9">P1</a>). The DID
+        Controller may be an individual or an organization.
+      </p>
+      <p>
+        The DID Controller is primarily concerned with the integrity of the DID
+        Document as created and updated by them. They need assurance that only
+        they can update or deactivate it, that the cryptographic material they
+        publish is the material they provided, and that their updates
+        (<a href="#dfn-f2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f2-5">F2</a>) reach the VDR and propagate to other VDR nodes (<a href="#dfn-f3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f3-4">F3</a>)
+        reliably and in a timely manner.
+      </p>
+      <p>
+        The DID Controller's choice of DID method is their most significant
+        security decision, as it determines which VDR they must trust
+        (<a href="#dfn-t1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t1-2">T1</a>) and how their DID can be resolved. Because DID documents
+        are typically public, the DID Controller is also concerned with what
+        information their DID document reveals and how it might be used to
+        correlate their activity.
+      </p>
+    </section>
+    <section id="e2-did-url-user"><div class="header-wrapper"><h3 id="x3-2-e2-did-url-user"><bdi class="secno">3.2 </bdi>E2 DID URL User</h3><a class="self-link" href="#e2-did-url-user" aria-label="Permalink for Section 3.2"></a></div>
+      
+      <p>
+        The primary consumer of a DID URL is an individual or organization seeking
+        to use a DID URL for some purpose. There are two major categories of
+        <a data-link-type="dfn|abstract-op" href="#dfn-e2" class="internalDFN" id="ref-for-dfn-e2-10">DID URL User</a>:
+      </p>
+      <ol>
+        <li>Someone who controls a <a data-link-type="dfn|abstract-op" href="#dfn-d8" class="internalDFN" id="ref-for-dfn-d8-4">DID document</a>, and presumably is able to
+        update the DID document in case its DID method support it.
+        </li>
+        <li>Someone who has received or seen a DID URL in a particular context
+        and wants to perform a DID related function with it, such as:
+          <ol>
+            <li>Verifying a proof signed by the DID</li>
+            <li>Verifying an authorization invocation</li>
+            <li>Interacting with the DID controller by sending a
+              message to a
+              service endpoint</li>
+            <li>Retrieving a resource indicated by a DID</li>
+          </ol>
+        </li>
+      </ol>
+      <p>
+        The <a data-link-type="dfn|abstract-op" href="#dfn-e2" class="internalDFN" id="ref-for-dfn-e2-11">DID URL User</a> is primarily concerned with the integrity and
+        reliability of the system. They may be just about anyone on the planet
+        with a computation device at their disposal: a smart phone, a desktop,
+        even a shared device at a library or internet cafe. The User could also
+        be a corporate employee or agent, who has received a DID from a supplier
+        or customer and wants to use it to verify a verifiable presentation or
+        satisfy a confidence method to increase their confidence that a given
+        actor is the subject of a particular Verifiable Credential.
+      </p>
+      <p>
+        As a technical layperson, the DID URL User requires a certain
+        reliability and simplicity; the system should “just work” in the manner
+        they have become accustomed to on the Web. When their software
+        encounters a DID URL, it should work just like any URL, without
+        additional interactions, when possible.
+      </p>
+      <p>
+        Perhaps most importantly, the DID URL User should retain complete
+        control over which software and services they use for DID
+        resolution.</p>
+      <p>
+        In practice, most individuals will make choices based on brand
+        confidence and peer recommendations. End users choose the software they
+        want to run and the services they access, including which resolvers to
+        use for specific DID methods. Just like a web browser enables end users
+        to choose which website they want to visit, DID URL users must be able
+        to direct their DID client software to use the resolvers they trust. In
+        practice, software will be delivered with default services and many
+        users will never see the difference, just as some users may start on a
+        browser's default home page and only click on links, never typing a URL
+        into an address bar. However, it is a fundamental security decision that
+        end users get to decide which resolvers are trusted.
+      </p>
+      <p>
+        Finally, the DID URL User may have any number of accessibility
+        challenges, from visual impairments to language gaps. While it is
+        important that DID resolution works seamlessly without a lot of
+        cognitive burden, implementations should take care to ensure that the
+        broadest number of users can effectively use the technology, especially
+        when interactive prompts are used to confirm or direct intermediary
+        behavior. For example, did:btcr has an iterative resolution process,
+        where the data required to complete resolution may not be known–even as
+        a requirement–when the DID URL is initially presented.
+      </p>
+    </section>
+    <section id="e3-did-url-author"><div class="header-wrapper"><h3 id="x3-3-e3-did-url-author"><bdi class="secno">3.3 </bdi>E3 DID URL Author</h3><a class="self-link" href="#e3-did-url-author" aria-label="Permalink for Section 3.3"></a></div>
+      
+      <p>
+        The DID URL Author (<a href="#dfn-e3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e3-6">E3</a>) constructs a DID URL (<a href="#dfn-d4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d4-8">D4</a>) and
+        gives it to the DID URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-12">E2</a>) through some means
+        (<a href="#dfn-f4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f4-4">F4</a>). The author may be the issuer of a verifiable credential,
+        the author of an email or document, a website, or a presenter showing
+        a DID on-screen. The author may or may not be the DID Controller
+        (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-7">E1</a>) of the DID in the DID URL.
+      </p>
+      <p>
+        The DID URL Author is primarily concerned that the DID URL reaches the
+        DID URL User intact and is recognized as authentic. Once the DID URL is
+        given, the author has no control over which software or resolver the
+        user relies on, so they depend on the user's choices to retrieve the
+        resource they intended. The author is also concerned that others might
+        impersonate them by substituting a different or look-alike DID URL.
+      </p>
+    </section>
+    <section id="e4-resolver-service-provider"><div class="header-wrapper"><h3 id="x3-4-e4-resolver-service-provider"><bdi class="secno">3.4 </bdi>E4 Resolver Service Provider</h3><a class="self-link" href="#e4-resolver-service-provider" aria-label="Permalink for Section 3.4"></a></div>
+      
+      <p>
+        The Resolver Service Provider (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-2">E4</a>) ensures that the resolution
+        service (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-12">P4</a>) is running as configured and without errors.
+      </p>
+      <p>
+        Fundamentally, the resolver service must be trustworthy enough for
+        users to be willing to rely on its results for cryptographically
+        anchored interactions. Since DIDs can be used to secure information
+        and transactions of arbitrary value, the service provider necessarily
+        wants to be perceived as reliable, friendly, and easy to use.
+      </p>
+      <p>
+        At the end of the day, it's the Resolver Service Provider that the DID
+        URL User (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-13">E2</a>) is trusting (<a href="#dfn-t2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t2-2">T2</a>) to return the real,
+        authoritative DID document.
+      </p>
+    </section>
+    <section id="e5-controller-vdr-service-provider-and-e6-resolver-vdr-service-provider"><div class="header-wrapper"><h3 id="x3-5-e5-controller-vdr-service-provider-and-e6-resolver-vdr-service-provider"><bdi class="secno">3.5 </bdi>E5 Controller VDR Service Provider and E6 Resolver VDR Service
+        Provider</h3><a class="self-link" href="#e5-controller-vdr-service-provider-and-e6-resolver-vdr-service-provider" aria-label="Permalink for Section 3.5"></a></div>
+      
+      <p>
+        VDR service providers care about providing a reliable verifiable data
+        registry, for whatever purpose that VDR is used for. The Controller VDR
+        Service Provider (<a href="#dfn-e5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e5-3">E5</a>) operates the Controller VDR node
+        (<a href="#dfn-p2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p2-8">P2</a>) that accepts updates from the DID Controller, while the
+        Resolver VDR Service Provider (<a href="#dfn-e6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e6-2">E6</a>) operates the Resolver VDR node
+        (<a href="#dfn-p5" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p5-9">P5</a>) queried by the resolver. These may be the same party or
+        entirely different parties.
+      </p>
+      <p>
+        Often a VDR service provider stands up a VDR device as a public service,
+        such as Bitcoin nodes that are accessible by others. Some service
+        providers may offer VDR capability as a paid service. In some cases, VDR
+        service providers who operate VDR nodes in support of a distributed
+        network (such as Ethereum or Bitcoin nodes) may not even be aware that
+        their VDR is being used for DIDs, nor do they need to be: the VDR maintains
+        its integrity on its own terms. 
+      </p>
+    </section>
+  </section>
+  <section id="threats"><div class="header-wrapper"><h2 id="x4-threats"><bdi class="secno">4. </bdi>Threats</h2><a class="self-link" href="#threats" aria-label="Permalink for Section 4."></a></div>
+    
+    <section id="threat-toc"><div class="header-wrapper"><h3 id="x4-1-threat-list"><bdi class="secno">4.1 </bdi>Threat List</h3><a class="self-link" href="#threat-toc" aria-label="Permalink for Section 4.1"></a></div>
+      
+        
+        <p class="threatCategory">Target Threats</p>
+        <ol class="threat-toc">
+          <li value="1"><a href="#t1-eavesdropping-by-a-did-resolution-service-provider">Eavesdropping by a DID Resolution Service Provider</a> 
+    </li>
+        </ol>
+        
+        <p class="threatCategory">Implementation Threats</p>
+        <ol class="threat-toc">
+          <li value="2"><a href="#t2-surveillance-by-proxy">Surveillance by Proxy</a> 
+    </li><li value="3"><a href="#t3-tampering-by-proxy">Tampering by Proxy</a> 
+    </li><li value="4"><a href="#t4-dos-by-proxy">DOS by Proxy</a> 
+    </li><li value="5"><a href="#t5-repudiation-by-proxying-resolver">Repudiation by Proxying Resolver</a> 
+    </li>
+        </ol>
+        
+        <p class="threatCategory">DID Threats</p>
+        <ol class="threat-toc">
+          <li value="6"><a href="#t6-correlation-by-overuse-(supercookie)">Correlation by Overuse (Supercookie)</a> 
+    </li><li value="7"><a href="#t7-correlation-by-data-exchange">Correlation by Data Exchange</a> 
+    </li><li value="8"><a href="#t8-spoofing-after-trust-on-first-use">Spoofing after Trust on First Use</a> 
+    </li>
+        </ol>
+        
+      </section>
+    <section id="threat-details"><div class="header-wrapper"><h3 id="x4-2-threat-details"><bdi class="secno">4.2 </bdi>Threat Details</h3><a class="self-link" href="#threat-details" aria-label="Permalink for Section 4.2"></a></div>
+      
+        
+        <p class="threatCategory">Target Threats</p>
+          
+      <section class="threatDetail" id="t1-eavesdropping-by-a-did-resolution-service-provider-0"><div class="header-wrapper"><h4 id="t1-eavesdropping-by-a-did-resolution-service-provider"><bdi class="secno">4.2.1 </bdi>T1. Eavesdropping by a DID Resolution Service Provider</h4><a class="self-link" href="#t1-eavesdropping-by-a-did-resolution-service-provider" aria-label="Permalink for Section 4.2.1"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T1.inner">T1. Eavesdropping by a DID Resolution Service Provider
+                  
+                </h4><a class="self-link" href="#T1.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            DID Resolution Service providers (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-3">E4</a>) receive a significant amount of data that may reveal personal or proprietary information.
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R1. Convey Threat Likelihood</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          When onboarding users to any particular DID Resolution Service Provider (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-4">E4</a>), explicitly communicate the data use policy in terms that users can understand.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R2. Purpose Binding</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Restrict the use of data provided to DID Resolution Service Providers (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-5">E4</a>) to explicit purpose as agreed to by the user (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-14">E2</a>).
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R3. Recommend Local Resolution</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          When explaining DID Resolution, educate users (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-15">E2</a>) about the tradeoffs of running a local resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-13">P4</a>) versus using a service provider (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-6">E4</a>).
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R4. Local Resolution</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Use a locally controlled resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-14">P4</a>) rather than using a service provider (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-7">E4</a>).
+        </td>
+          </tr>
+          
+          <tr>
+          <td class="affected-component">Affected Components: <a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-8">E4</a>, <a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-3">F6</a>, <a href="#dfn-c4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c4-5">C4</a>, <a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-15">P4</a>, <a href="#dfn-d6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d6-2">D6</a></td>
+        </tr>
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Information Disclosure)</td>
+          </tr>
+        </tbody></table>
+        <p class="threatCategory">Implementation Threats</p>
+          
+      <section class="threatDetail" id="t2-surveillance-by-proxy-0"><div class="header-wrapper"><h4 id="t2-surveillance-by-proxy"><bdi class="secno">4.2.2 </bdi>T2. Surveillance by Proxy</h4><a class="self-link" href="#t2-surveillance-by-proxy" aria-label="Permalink for Section 4.2.2"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T2.inner">T2. Surveillance by Proxy
+                  
+                </h4><a class="self-link" href="#T2.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            Proxying resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-16">P4</a>), who pass incoming resolution requests (<a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-4">F6</a>) to another resolver before passing the result back, enable the initial resolver to observe all traffic to all proxied resolvers.
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R4. Direct Resolution</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using a proxying resolver, choose trustworthy first party resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-17">P4</a>) with whom you communicate directly.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R5. Local Resolution</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using an external resolver, run your own resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-18">P4</a>).
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R6. Terms of Service (no proxying)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Use explicit terms of service that include a commitment to performing resolution directly instead of proxying to third party services. This provides explicit documentation of expectations, and legal accountability should the resolving party (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-9">E4</a>) break that agreement.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R8. Duty of Care</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Establish legally enforced duty of care, either by statute or precedent, which holds resolvers (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-10">E4</a>) responsible as agents acting on behalf of clients (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-16">E2</a>). Duty of care pertains to the treatment of sensitive data in their possession. This response likely entails both contractual elements and either legislative or court-based engagement, or, more likely, both.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R9. Duty of Loyalty</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Establish legally enforced duty of loyalty, either by statute or precedent, which holds resolvers (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-11">E4</a>) responsible as agents acting on behalf of clients (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-17">E2</a>). Duty of loyalty pertains to the use of sensitive data contrary to the interest of the client. This response likely entails both contractual elements and either legislative or court-based engagement, or, more likely, both.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R10. Trust</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The DID security model depends on trusting (<a href="#dfn-t2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t2-3">T2</a>) the resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-19">P4</a>) to honestly return the result from each DID's resolution process. Given the necessary trust for executing a complex algorithm correctly, clients can choose to also trust the resolver to select trustworthy secondary resolvers.
+        </td>
+          </tr>
+          
+          
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Information Disclosure)</td>
+          </tr>
+        </tbody></table>
+      <section class="threatDetail" id="t3-tampering-by-proxy-0"><div class="header-wrapper"><h4 id="t3-tampering-by-proxy"><bdi class="secno">4.2.3 </bdi>T3. Tampering by Proxy</h4><a class="self-link" href="#t3-tampering-by-proxy" aria-label="Permalink for Section 4.2.3"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T3.inner">T3. Tampering by Proxy
+                  
+                </h4><a class="self-link" href="#T3.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            Proxying resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-20">P4</a>), who pass incoming resolution requests (<a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-5">F6</a>) to another resolver before passing the result back, enable the initial resolver to manipulate all traffic to and from all proxied resolvers, including tampering with the fundamental result from resolution: the DID document (<a href="#dfn-d8" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d8-5">D8</a>).
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R4. Direct Resolution (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using a proxying resolver, choose trustworthy first party resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-21">P4</a>) with whom you communicate directly.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R5. Local Resolution (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using an external resolver, run your own resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-22">P4</a>).
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R6. Terms of Service (no proxying) (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Use explicit terms of service that include a commitment to performing resolution directly instead of proxying to third party services. This provides explicit documentation of expectations, and legal accountability should the resolving party (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-12">E4</a>) break that agreement.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R7. Terms of Service (no tampering)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Use explicit terms of service that include a commitment to delivering authentic, unmodified resolution results (<a href="#dfn-d8" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d8-6">D8</a>, <a href="#dfn-d9" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d9-3">D9</a>, <a href="#dfn-d10" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d10-3">D10</a>). This provides explicit documentation of expectations and legal accountability should the resolving party (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-13">E4</a>) break that agreement.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R8. Duty of Care (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Establish legally enforced duty of care, either by statute or precedent, which holds resolvers (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-14">E4</a>) responsible as agents acting on behalf of clients (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-18">E2</a>). Duty of care pertains to the treatment of sensitive data in their possession. This response likely entails both contractual elements and either legislative or court-based engagement, or, more likely, both.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R9. Duty of Loyalty (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Establish legally enforced duty of loyalty, either by statute or precedent, which holds resolvers (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-15">E4</a>) responsible as agents acting on behalf of clients (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-19">E2</a>). Duty of loyalty pertains to the use of sensitive data contrary to the interest of the client. This response likely entails both contractual elements and either legislative or court-based engagement, or, more likely, both.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R10. Trust (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The DID security model depends on trusting (<a href="#dfn-t2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t2-4">T2</a>) the resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-23">P4</a>) to honestly return the result from each DID's resolution process. Given the necessary trust for executing a complex algorithm correctly, clients can choose to also trust the resolver to select trustworthy secondary resolvers.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R11. Signed Resolution Results</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Have secondary resolvers add a tamper-evident, cryptographic signature to all results returned to the proxy, ensuring the calling client (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-11">P3</a>) can verify the result has not been tampered with by the proxying resolver. This requires the client to either know or be able to verify the public key or cryptographic identifier used to generate the signature.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">Rx. Include resolution metadata</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Include resolution metadata (<a href="#dfn-d10" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d10-4">D10</a>) from proxied resolvers in the result to the primary resolution request (<a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-6">F6</a>).
+        </td>
+          </tr>
+          
+          
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Tampering)</td>
+          </tr>
+        </tbody></table>
+      <section class="threatDetail" id="t4-dos-by-proxy-0"><div class="header-wrapper"><h4 id="t4-dos-by-proxy"><bdi class="secno">4.2.4 </bdi>T4. DOS by Proxy</h4><a class="self-link" href="#t4-dos-by-proxy" aria-label="Permalink for Section 4.2.4"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T4.inner">T4. DOS by Proxy
+                  
+                </h4><a class="self-link" href="#T4.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            Proxying resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-24">P4</a>), who pass incoming resolution requests (<a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-7">F6</a>) to another resolver before passing the result back, can arbitrarily choose to deny proxy service to some or all secondary resolvers. This may be for legitimate business reasons (the secondary resolver charges too much) or for malicious reasons (to disrupt clients (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-12">P3</a>) that have become dependent on that proxied result).
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R4. Direct Resolution (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using a proxying resolver, choose trustworthy first party resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-25">P4</a>) with whom you communicate directly.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R5. Local Resolution (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using an external resolver, run your own resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-26">P4</a>).
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R6. Terms of Service (no proxying) (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Use explicit terms of service that include a commitment to performing resolution directly instead of proxying to third party services. This provides explicit documentation of expectations, and legal accountability should the resolving party (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-16">E4</a>) break that agreement.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R12. Terms of Service (assurance)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Resolvers (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-17">E4</a>) can include in their terms of service a guarantee to resolve all requests for specific DID methods, regardless of back-end service providers.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R10. Trust (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The DID security model depends on trusting (<a href="#dfn-t2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t2-5">T2</a>) the resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-27">P4</a>) to honestly return the result from each DID's resolution process. Given the necessary trust for executing a complex algorithm correctly, clients can choose to also trust the resolver to select trustworthy secondary resolvers.
+        </td>
+          </tr>
+          
+          
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Denial)</td>
+          </tr>
+        </tbody></table>
+      <section class="threatDetail" id="t5-repudiation-by-proxying-resolver-0"><div class="header-wrapper"><h4 id="t5-repudiation-by-proxying-resolver"><bdi class="secno">4.2.5 </bdi>T5. Repudiation by Proxying Resolver</h4><a class="self-link" href="#t5-repudiation-by-proxying-resolver" aria-label="Permalink for Section 4.2.5"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T5.inner">T5. Repudiation by Proxying Resolver
+                  
+                </h4><a class="self-link" href="#T5.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            Proxying resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-28">P4</a>), who pass incoming resolution requests (<a href="#dfn-f6" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-f6-8">F6</a>) to another resolver before passing the result back, may deny that they were responsible for any particular result to a client (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-13">P3</a>), asserting that the errant result was the output of a secondary resolver.
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R4. Direct Resolution (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using a proxying resolver, choose trustworthy first party resolvers (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-29">P4</a>) with whom you communicate directly.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R5. Local Resolution (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Instead of using an external resolver, run your own resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-30">P4</a>).
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R6. Terms of Service (no proxying) (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Use explicit terms of service that include a commitment to performing resolution directly instead of proxying to third party services. This provides explicit documentation of expectations, and legal accountability should the resolving party (<a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-18">E4</a>) break that agreement.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R10. Trust (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The DID security model depends on trusting (<a href="#dfn-t2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-t2-6">T2</a>) the resolver (<a href="#dfn-p4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p4-31">P4</a>) to honestly return the result from each DID's resolution process. Given the necessary trust for executing a complex algorithm correctly, clients can choose to also trust the resolver to select trustworthy secondary resolvers.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">R11. Signed Resolution Results (Repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Have secondary resolvers add a tamper-evident, cryptographic signature to all results returned to the proxy, ensuring the calling client (<a href="#dfn-p3" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-p3-14">P3</a>) can verify the result has not been tampered with by the proxying resolver. This requires the client to either know or be able to verify the public key or cryptographic identifier used to generate the signature.
+        </td>
+          </tr>
+          
+          
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Information Disclosure)</td>
+          </tr>
+        </tbody></table>
+        <p class="threatCategory">DID Threats</p>
+          
+      <section class="threatDetail" id="t6-correlation-by-overuse-supercookie"><div class="header-wrapper"><h4 id="t6-correlation-by-overuse-(supercookie)"><bdi class="secno">4.2.6 </bdi>T6. Correlation by Overuse (Supercookie)</h4><a class="self-link" href="#t6-correlation-by-overuse-(supercookie)" aria-label="Permalink for Section 4.2.6"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T6.inner">T6. Correlation by Overuse (Supercookie)
+                  
+                </h4><a class="self-link" href="#T6.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            when a user (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-8">E1</a>) creates, maintains, and uses a single DID (<a href="#dfn-d1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d1-4">D1</a>) for interacting with multiple parties, those parties are able to use that DID to correlate user activity. This is especially true when user activity is correlated similarly to what is currently done for web analytics using cloud-based data aggregators. Such a universal DID could enable ‘super cookie’ functionality.
+
+Even when bootstrapping a new unique contextual DID after authenticating using an initial DID, the recipient will still know the initial DID and be able to correlate activity between the second DID and the first.
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R1. Convey Threat Likelihood (repeat?)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          When users (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-9">E1</a>) create a DID (<a href="#dfn-d1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d1-5">D1</a>), explicitly communicate the data use policies in terms that users can understand. Enable users to create multiple DIDs and recommend using peer DIDs for each connection the user establishes.
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">Rx. Contextual Unique DIDs</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          
+        </td>
+          </tr>
+          
+          <tr>
+          <td class="affected-component">Affected Components: <a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-20">E2</a>, <a href="#dfn-e4" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e4-19">E4</a></td>
+        </tr>
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Information Disclosure)</td>
+          </tr>
+        </tbody></table>
+      <section class="threatDetail" id="t7-correlation-by-data-exchange-0"><div class="header-wrapper"><h4 id="t7-correlation-by-data-exchange"><bdi class="secno">4.2.7 </bdi>T7. Correlation by Data Exchange</h4><a class="self-link" href="#t7-correlation-by-data-exchange" aria-label="Permalink for Section 4.2.7"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T7.inner">T7. Correlation by Data Exchange
+                  
+                </h4><a class="self-link" href="#T7.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            using multiple contextualized unique DIDs (<a href="#dfn-d1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d1-6">D1</a>) with different parties can lead to correlation if, in the context of those DIDs, the user (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-10">E1</a>) exchanges additional correlatable information. For example, sharing an address in order to receive a product, allows anyone who received that address to correlate the user as potentially the same person.
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R9. Duty of Loyalty (repeat)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Paper: A Duty of Loyalty for Privacy Law
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">Rx. TOS (don't correlate)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          undefined
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">Rx2. Zero Knowledge Proofs / Selective Disclosure</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          undefined
+        </td>
+          </tr>
+          
+          <tr>
+        <td class="response-name">Rx3. Data Minimization</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          undefined
+        </td>
+          </tr>
+          
+          
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Information Disclosure)</td>
+          </tr>
+        </tbody></table>
+      <section class="threatDetail" id="t8-spoofing-after-trust-on-first-use-0"><div class="header-wrapper"><h4 id="t8-spoofing-after-trust-on-first-use"><bdi class="secno">4.2.8 </bdi>T8. Spoofing after Trust on First Use</h4><a class="self-link" href="#t8-spoofing-after-trust-on-first-use" aria-label="Permalink for Section 4.2.8"></a></div>
+        
+      </section>
+        <table class="threat">
+          
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T8.inner">T8. Spoofing after Trust on First Use
+                  
+                </h4><a class="self-link" href="#T8.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-toc">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+          
+        <tr>
+          <td class="threat-description">
+            when a human user (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-11">E1</a>) proves control over a DID (<a href="#dfn-d1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d1-7">D1</a>), it is often interpreted as a proof of identity during subsequent uses of the DID. Proving ownership or control of a DID is done by demonstrating control over the private key upon which the DID is based. If a user device (<a href="#dfn-c1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-c1-5">C1</a>) that holds a DID (and the associated cryptographic keys (<a href="#dfn-d2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-d2-3">D2</a>)) is compromised, then the compromising malware may be asserting control of the DID by virtue of its control of the associated private key. As such, human operator identity may not be reliable.
+          </td>
+        </tr>
+        
+          
+          
+          <tr>
+        <td class="response-name">R1. Convey Threat Likelihood</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Explicitly convey to DID holders (<a href="#dfn-e1" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e1-12">E1</a>) and verifiers (<a href="#dfn-e2" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-e2-21">E2</a>) that proving control of a DID does not fully establish the controller’s identity, which should be verified.
+        </td>
+          </tr>
+          
+          
+          
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Spoofing)</td>
+          </tr>
+        </tbody></table>
+      </section>
+  </section>
+  <section id="contributing"><div class="header-wrapper"><h2 id="x5-contributing"><bdi class="secno">5. </bdi>Contributing</h2><a class="self-link" href="#contributing" aria-label="Permalink for Section 5."></a></div>
+    
+    <p>This threat model was developed using the <a href="https://w3.org/tr/threat-modeling-guide"><abbr title="World Wide Web Consortium">W3C</abbr> Threat
+        Modeling Guide</a>. Contributions to this threat model that
+      are aligned with that approach are welcome. </p>
+    <p>To propose a change, create an <a href="https://github.com/w3c/did-resolution-threat-model/issues/new/choose">new
+        issue</a> proposing your change. Discussion on Github about
+      that issue will help collaborators understand and incorporate it
+      into the model. It may be that the issue is perfect, but most
+      likely feedback will improve it. </p>
+    <p>Once a consensus has emerged about adding a particular threat,
+      updating the diagram, or any other change, a Pull Request
+      can be submitted to the repo to propose the actual specification
+      text that realizes the suggestion.
+    </p>
+    <p>Issues discussing threats should eventually cover all of the
+      threat details needed to propose the change in a PR.
+    </p>
+    <section id="adding-a-threat"><div class="header-wrapper"><h3 id="x5-1-adding-a-threat"><bdi class="secno">5.1 </bdi>Adding a threat</h3><a class="self-link" href="#adding-a-threat" aria-label="Permalink for Section 5.1"></a></div>
+      
+      <p>To add a new threat to the model, we need several components.
+      </p>
+      <ol>
+        <li>A good name</li>
+        <li>A unique ID</li>
+        <li>A description</li>
+        <li>One or more responses</li>
+        <li>List of affected elements</li>
+        <li>The threat taxonomy</li>
+        <li>The threat class</li>
+      </ol>
+      <p>We discuss each of these below.</p>
+      <section id="a-good-name"><div class="header-wrapper"><h4 id="x5-1-1-a-good-name"><bdi class="secno">5.1.1 </bdi>A good name</h4><a class="self-link" href="#a-good-name" aria-label="Permalink for Section 5.1.1"></a></div>
+        
+        <p>Choose a short, descriptive name that captures the essence
+          of
+          the threat. Make sure the name is distinctive within this
+          threat model.</p>
+      </section>
+      <section id="a-unique-id"><div class="header-wrapper"><h4 id="x5-1-2-a-unique-id"><bdi class="secno">5.1.2 </bdi>A unique ID</h4><a class="self-link" href="#a-unique-id" aria-label="Permalink for Section 5.1.2"></a></div>
+        
+        <p>Every threat should have a unique ID that starts with the
+          letter <strong>'T'</strong> following by an integer number,
+          e.g., <strong>T12</strong></p>
+      </section>
+      <section id="a-description"><div class="header-wrapper"><h4 id="x5-1-3-a-description"><bdi class="secno">5.1.3 </bdi>A description</h4><a class="self-link" href="#a-description" aria-label="Permalink for Section 5.1.3"></a></div>
+        
+        <p>Describe the threat with enough detail for readers to
+          understand the scope of concern</p>
+      </section>
+      <section id="one-or-more-responses"><div class="header-wrapper"><h4 id="x5-1-4-one-or-more-responses"><bdi class="secno">5.1.4 </bdi>One or more responses</h4><a class="self-link" href="#one-or-more-responses" aria-label="Permalink for Section 5.1.4"></a></div>
+        
+        <p>Each response should describe something either the
+          specification does or that implenters should consider to
+          address the threat. Responses also need a good name (short
+          and
+          descriptive) and a unique ID (starting with the letter 'R'
+          followed by an integer number).</p>
+        <p>It is likely that a single response is appropriate for
+          multiple unique threats. For example, cryptographic signing
+          is
+          a reasonable response to tampering for any number of data
+          objects. In this case, simply reuse the response name and ID
+          of the first use and repeat the description text along with
+          the phrase, in parantheses, '(Reused Response)'</p>
+      </section>
+      <section id="list-of-affected-elements"><div class="header-wrapper"><h4 id="x5-1-5-list-of-affected-elements"><bdi class="secno">5.1.5 </bdi>List of affected elements</h4><a class="self-link" href="#list-of-affected-elements" aria-label="Permalink for Section 5.1.5"></a></div>
+        
+        <p>Drawing from the diagram and dictionary, identify the
+          components in the diagram affected by this threat. Make sure
+          the PR includes a link to the affected components, e.g.,
+        </p><pre aria-busy="false"><code class="hljs">C1</code></pre>
+        <p></p>
+      </section>
+      <section id="the-threat-taxonomy"><div class="header-wrapper"><h4 id="x5-1-6-the-threat-taxonomy"><bdi class="secno">5.1.6 </bdi>The threat taxonomy</h4><a class="self-link" href="#the-threat-taxonomy" aria-label="Permalink for Section 5.1.6"></a></div>
+        
+        <p>Identify the threat taxonomy used to identify the
+          threat.
+          For example, STRIDE, LINDUN, or OSSTMM3 for taxonomy. If none was used,
+          enter "NONE".</p>
+          <p></p>
+      </section>
+      <section id="the-threat-class"><div class="header-wrapper"><h4 id="x5-1-7-the-threat-class"><bdi class="secno">5.1.7 </bdi>The threat class</h4><a class="self-link" href="#the-threat-class" aria-label="Permalink for Section 5.1.7"></a></div>
+        
+        <p>Identify the class of threat as defined within the threat taxonomy.
+          For example, "Spoofing".</p>
+          <p></p>
+      </section>
+    </section>
+    <section id="adding-to-this-repo"><div class="header-wrapper"><h3 id="x5-2-adding-to-this-repo"><bdi class="secno">5.2 </bdi>Adding to this repo</h3><a class="self-link" href="#adding-to-this-repo" aria-label="Permalink for Section 5.2"></a></div>
+      
+      <ol>
+        <li>Create A threat file</li>
+        <li>Give it a good name</li>
+        <li>Add javascript element</li>
+        <li>Add threat to outline</li>
+      </ol>
+      <section id="create-a-threat-file"><div class="header-wrapper"><h4 id="x5-2-1-create-a-threat-file"><bdi class="secno">5.2.1 </bdi>Create a threat file</h4><a class="self-link" href="#create-a-threat-file" aria-label="Permalink for Section 5.2.1"></a></div>
+      <p>Create a JavaScript file that defines and registers your
+        threat, formatted like the following template. Make sure you
+        retain the opening immediate function execution wrapper and
+        that you register with the ThreatModel object.</p>
+      <pre id="threatTemplate" aria-busy="false"><code class="hljs javascript"><span class="hljs-comment">// wrap your data definition in an Immediately Invoked Function Expression</span>
+(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+  
+  <span class="hljs-comment">// then define a single threat</span>
+  <span class="hljs-keyword">var</span> threat = {
+    <span class="hljs-attr">id</span>: <span class="hljs-string">"T0"</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Template Threat"</span>,
+    <span class="hljs-attr">description</span>: <span class="hljs-string">"This is a template threat. It is not a real threat."</span>,
+    <span class="hljs-attr">responses</span>: [{
+      <span class="hljs-attr">id</span>: <span class="hljs-string">"R0"</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">"Template Response"</span>,
+      <span class="hljs-attr">description</span>: <span class="hljs-string">"This is a template response. It is not a real response."</span>
+    }],
+    <span class="hljs-attr">elements</span>: [<span class="hljs-string">"C1"</span>, <span class="hljs-string">"P1"</span>],
+    <span class="hljs-attr">taxonomyName</span>: <span class="hljs-string">"Fake Taxonomy"</span>,
+    <span class="hljs-attr">taxonomyClass</span>: <span class="hljs-string">"Fake Type"</span>
+    <span class="hljs-attr">tags</span>: [<span class="hljs-string">"security"</span>]
+    }
+  };
+
+  <span class="hljs-comment">// then register that threat with the global ThreatModel object </span>
+  <span class="hljs-variable language_">window</span>.<span class="hljs-property">ThreatModel</span>.<span class="hljs-title function_">registerThreat</span>(threat);
+
+})();  <span class="hljs-comment">// Finish the Immediately Invoked Function Expression</span></code></pre>
+      </section><section id="give-the-file-a-good-name"><div class="header-wrapper"><h4 id="x5-2-2-give-the-file-a-good-name"><bdi class="secno">5.2.2 </bdi>Give the file a good name</h4><a class="self-link" href="#give-the-file-a-good-name" aria-label="Permalink for Section 5.2.2"></a></div>
+      <p>Name the file uniquely, preferably with the following pattern
+        based on the ID and name, all in lower-case kebab style</p>
+      <pre aria-busy="false"><code class="hljs javascript"><span class="hljs-keyword">var</span> id = <span class="hljs-string">`<span class="hljs-subst">${threat.id}</span>-<span class="hljs-subst">${threat.name}</span>`</span>;
+id = id.<span class="hljs-title function_">toLowerCase</span>();
+id = id.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/ /g</span>, <span class="hljs-string">"-"</span>);
+<span class="hljs-keyword">return</span> id;</code></pre>
+      <p>For example, <strong>T0. Template Threat</strong> becomes
+        <code>t0-template-threat</code></p>
+
+      </section><section id="add-javascript-element"><div class="header-wrapper"><h4 id="x5-2-3-add-javascript-element"><bdi class="secno">5.2.3 </bdi>Add javascript element</h4><a class="self-link" href="#add-javascript-element" aria-label="Permalink for Section 5.2.3"></a></div>
+      <p>Add a new <code>&lt;script&gt;</code> tag</p> to index.html
+      alongside the other threat definition files
+      <pre aria-busy="false"><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"threats/t0-template-threat.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+      </section><section id="add-threat-to-outline"><div class="header-wrapper"><h4 id="x5-2-4-add-threat-to-outline"><bdi class="secno">5.2.4 </bdi>Add threat to outline</h4><a class="self-link" href="#add-threat-to-outline" aria-label="Permalink for Section 5.2.4"></a></div>
+      <p>Update the outline.js file, adding the <code>id</code> of
+        your threat, e.g., <code>T0</code> to the threats array.
+      </p>
+      </section><section id="test-submit"><div class="header-wrapper"><h4 id="x5-2-5-test-submit"><bdi class="secno">5.2.5 </bdi>Test &amp; Submit</h4><a class="self-link" href="#test-submit" aria-label="Permalink for Section 5.2.5"></a></div>
+      <p>Open the index.html locally and you should see your threat
+        added to the list. Propose your working change as a PR, for
+        consideration by the editors.</p>
+    </section></section>
+  </section>
+
+  <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e1" aria-label="Links in this document to definition: E1 DID Controller">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e1" aria-label="Permalink for definition: E1 DID Controller. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e1-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e1-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-e1-3" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e1-4" title="Reference 3">(3)</a> <a href="#ref-for-dfn-e1-5" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e1-6" title="§ 3.1 E1 DID Controller">§ 3.1 E1 DID Controller</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e1-7" title="§ 3.3 E3 DID URL Author">§ 3.3 E3 DID URL Author</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e1-8" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-e1-9" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e1-10" title="Reference 3">(3)</a> <a href="#ref-for-dfn-e1-11" title="Reference 4">(4)</a> <a href="#ref-for-dfn-e1-12" title="Reference 5">(5)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e2" aria-label="Links in this document to definition: E2 DID URL User">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e2" aria-label="Permalink for definition: E2 DID URL User. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e2-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-e2-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e2-3" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e2-4" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-e2-5" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e2-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-e2-7" title="Reference 4">(4)</a> <a href="#ref-for-dfn-e2-8" title="Reference 5">(5)</a> <a href="#ref-for-dfn-e2-9" title="Reference 6">(6)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e2-10" title="§ 3.2 E2 DID URL User">§ 3.2 E2 DID URL User</a> <a href="#ref-for-dfn-e2-11" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e2-12" title="§ 3.3 E3 DID URL Author">§ 3.3 E3 DID URL Author</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e2-13" title="§ 3.4 E4 Resolver Service Provider">§ 3.4 E4 Resolver Service Provider</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e2-14" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-e2-15" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e2-16" title="Reference 3">(3)</a> <a href="#ref-for-dfn-e2-17" title="Reference 4">(4)</a> <a href="#ref-for-dfn-e2-18" title="Reference 5">(5)</a> <a href="#ref-for-dfn-e2-19" title="Reference 6">(6)</a> <a href="#ref-for-dfn-e2-20" title="Reference 7">(7)</a> <a href="#ref-for-dfn-e2-21" title="Reference 8">(8)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e3" aria-label="Links in this document to definition: E3 DID URL Author">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e3" aria-label="Permalink for definition: E3 DID URL Author. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e3-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-e3-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e3-3" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-e3-4" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e3-5" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e3-6" title="§ 3.3 E3 DID URL Author">§ 3.3 E3 DID URL Author</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e4" aria-label="Links in this document to definition: E4 Resolver Service Provider">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e4" aria-label="Permalink for definition: E4 Resolver Service Provider. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e4-1" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e4-2" title="§ 3.4 E4 Resolver Service Provider">§ 3.4 E4 Resolver Service Provider</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e4-3" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-e4-4" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e4-5" title="Reference 3">(3)</a> <a href="#ref-for-dfn-e4-6" title="Reference 4">(4)</a> <a href="#ref-for-dfn-e4-7" title="Reference 5">(5)</a> <a href="#ref-for-dfn-e4-8" title="Reference 6">(6)</a> <a href="#ref-for-dfn-e4-9" title="Reference 7">(7)</a> <a href="#ref-for-dfn-e4-10" title="Reference 8">(8)</a> <a href="#ref-for-dfn-e4-11" title="Reference 9">(9)</a> <a href="#ref-for-dfn-e4-12" title="Reference 10">(10)</a> <a href="#ref-for-dfn-e4-13" title="Reference 11">(11)</a> <a href="#ref-for-dfn-e4-14" title="Reference 12">(12)</a> <a href="#ref-for-dfn-e4-15" title="Reference 13">(13)</a> <a href="#ref-for-dfn-e4-16" title="Reference 14">(14)</a> <a href="#ref-for-dfn-e4-17" title="Reference 15">(15)</a> <a href="#ref-for-dfn-e4-18" title="Reference 16">(16)</a> <a href="#ref-for-dfn-e4-19" title="Reference 17">(17)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e5" aria-label="Links in this document to definition: E5 Controller VDR Service Provider">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e5" aria-label="Permalink for definition: E5 Controller VDR Service Provider. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e5-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e5-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e5-3" title="§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider">§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e6" aria-label="Links in this document to definition: E6 Resolver VDR Service Provider">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e6" aria-label="Permalink for definition: E6 Resolver VDR Service Provider. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e6-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-e6-2" title="§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider">§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c1" aria-label="Links in this document to definition: C1 DID Controller Device">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c1" aria-label="Permalink for definition: C1 DID Controller Device. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c1-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-c1-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-c1-3" title="Reference 2">(2)</a> <a href="#ref-for-dfn-c1-4" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-c1-5" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c2" aria-label="Links in this document to definition: C2 Controller VDR Device">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c2" aria-label="Permalink for definition: C2 Controller VDR Device. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c2-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-c2-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c3" aria-label="Links in this document to definition: C3 DID User Client Device">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c3" aria-label="Permalink for definition: C3 DID User Client Device. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c3-1" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-c3-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-c3-3" title="Reference 3">(3)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c4" aria-label="Links in this document to definition: C4 Resolver Device">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c4" aria-label="Permalink for definition: C4 Resolver Device. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c4-1" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-c4-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-c4-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-c4-4" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-c4-5" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c5" aria-label="Links in this document to definition: C5 Resolver VDR Device">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c5" aria-label="Permalink for definition: C5 Resolver VDR Device. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c5-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p1" aria-label="Links in this document to definition: P1 DID Controller Process">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p1" aria-label="Permalink for definition: P1 DID Controller Process. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p1-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-p1-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p1-3" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-p1-4" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p1-5" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p1-6" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p1-7" title="Reference 5">(5)</a> <a href="#ref-for-dfn-p1-8" title="Reference 6">(6)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p1-9" title="§ 3.1 E1 DID Controller">§ 3.1 E1 DID Controller</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p2" aria-label="Links in this document to definition: P2 Controller VDR Node">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p2" aria-label="Permalink for definition: P2 Controller VDR Node. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p2-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p2-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-p2-3" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p2-4" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p2-5" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p2-6" title="Reference 5">(5)</a> <a href="#ref-for-dfn-p2-7" title="Reference 6">(6)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p2-8" title="§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider">§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p3" aria-label="Links in this document to definition: P3 DID-enabled Application">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p3" aria-label="Permalink for definition: P3 DID-enabled Application. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p3-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-p3-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p3-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p3-4" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p3-5" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-p3-6" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p3-7" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p3-8" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p3-9" title="Reference 5">(5)</a> <a href="#ref-for-dfn-p3-10" title="Reference 6">(6)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p3-11" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-p3-12" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p3-13" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p3-14" title="Reference 4">(4)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p4" aria-label="Links in this document to definition: P4 Resolver">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p4" aria-label="Permalink for definition: P4 Resolver. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p4-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-p4-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p4-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p4-4" title="Reference 4">(4)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p4-5" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-p4-6" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p4-7" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p4-8" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p4-9" title="Reference 5">(5)</a> <a href="#ref-for-dfn-p4-10" title="Reference 6">(6)</a> <a href="#ref-for-dfn-p4-11" title="Reference 7">(7)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p4-12" title="§ 3.4 E4 Resolver Service Provider">§ 3.4 E4 Resolver Service Provider</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p4-13" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-p4-14" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p4-15" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p4-16" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p4-17" title="Reference 5">(5)</a> <a href="#ref-for-dfn-p4-18" title="Reference 6">(6)</a> <a href="#ref-for-dfn-p4-19" title="Reference 7">(7)</a> <a href="#ref-for-dfn-p4-20" title="Reference 8">(8)</a> <a href="#ref-for-dfn-p4-21" title="Reference 9">(9)</a> <a href="#ref-for-dfn-p4-22" title="Reference 10">(10)</a> <a href="#ref-for-dfn-p4-23" title="Reference 11">(11)</a> <a href="#ref-for-dfn-p4-24" title="Reference 12">(12)</a> <a href="#ref-for-dfn-p4-25" title="Reference 13">(13)</a> <a href="#ref-for-dfn-p4-26" title="Reference 14">(14)</a> <a href="#ref-for-dfn-p4-27" title="Reference 15">(15)</a> <a href="#ref-for-dfn-p4-28" title="Reference 16">(16)</a> <a href="#ref-for-dfn-p4-29" title="Reference 17">(17)</a> <a href="#ref-for-dfn-p4-30" title="Reference 18">(18)</a> <a href="#ref-for-dfn-p4-31" title="Reference 19">(19)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p5" aria-label="Links in this document to definition: P5 Resolver VDR Node">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p5" aria-label="Permalink for definition: P5 Resolver VDR Node. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p5-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-p5-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p5-3" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p5-4" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-p5-5" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p5-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p5-7" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p5-8" title="Reference 5">(5)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-p5-9" title="§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider">§ 3.5 E5 Controller VDR Service Provider and E6 Resolver VDR Service Provider</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d1" aria-label="Links in this document to definition: D1 DID">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d1" aria-label="Permalink for definition: D1 DID. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d1-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d1-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d1-3" title="§ 3.1 E1 DID Controller">§ 3.1 E1 DID Controller</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d1-4" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-d1-5" title="Reference 2">(2)</a> <a href="#ref-for-dfn-d1-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-d1-7" title="Reference 4">(4)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d2" aria-label="Links in this document to definition: D2 DID Controller Data Store">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d2" aria-label="Permalink for definition: D2 DID Controller Data Store. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d2-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d2-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d2-3" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d3" aria-label="Links in this document to definition: D3 Controller VDR Data Store">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d3" aria-label="Permalink for definition: D3 Controller VDR Data Store. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d3-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d3-2" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d4" aria-label="Links in this document to definition: D4 DID URL">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d4" aria-label="Permalink for definition: D4 DID URL. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d4-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-d4-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d4-3" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-d4-4" title="Reference 2">(2)</a> <a href="#ref-for-dfn-d4-5" title="Reference 3">(3)</a> <a href="#ref-for-dfn-d4-6" title="Reference 4">(4)</a> <a href="#ref-for-dfn-d4-7" title="Reference 5">(5)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d4-8" title="§ 3.3 E3 DID URL Author">§ 3.3 E3 DID URL Author</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d5" aria-label="Links in this document to definition: D5 Client Data Store">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d5" aria-label="Permalink for definition: D5 Client Data Store. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d5-1" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d6" aria-label="Links in this document to definition: D6 Resolver Local Data">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d6" aria-label="Permalink for definition: D6 Resolver Local Data. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d6-1" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d6-2" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d7" aria-label="Links in this document to definition: D7 Resolver VDR Data Store">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d7" aria-label="Permalink for definition: D7 Resolver VDR Data Store. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d7-1" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d8" aria-label="Links in this document to definition: D8 DID Document">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d8" aria-label="Permalink for definition: D8 DID Document. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d8-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-d8-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d8-3" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d8-4" title="§ 3.2 E2 DID URL User">§ 3.2 E2 DID URL User</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d8-5" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-d8-6" title="Reference 2">(2)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d9" aria-label="Links in this document to definition: D9 DID Document Metadata">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d9" aria-label="Permalink for definition: D9 DID Document Metadata. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d9-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-d9-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d9-3" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-d10" aria-label="Links in this document to definition: D10 DID Resolution Metadata">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-d10" aria-label="Permalink for definition: D10 DID Resolution Metadata. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-d10-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-d10-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-d10-3" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-d10-4" title="Reference 2">(2)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f1" aria-label="Links in this document to definition: F1 Manage DID">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f1" aria-label="Permalink for definition: F1 Manage DID. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f1-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-f1-2" title="Reference 2">(2)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f2" aria-label="Links in this document to definition: F2 Update VDR State">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f2" aria-label="Permalink for definition: F2 Update VDR State. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f2-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-f2-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-f2-3" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-f2-4" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-f2-5" title="§ 3.1 E1 DID Controller">§ 3.1 E1 DID Controller</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f3" aria-label="Links in this document to definition: F3 Synchronize VDR State">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f3" aria-label="Permalink for definition: F3 Synchronize VDR State. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f3-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-f3-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-f3-3" title="Reference 3">(3)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-f3-4" title="§ 3.1 E1 DID Controller">§ 3.1 E1 DID Controller</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f4" aria-label="Links in this document to definition: F4 Give DID URL">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f4" aria-label="Permalink for definition: F4 Give DID URL. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f4-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-f4-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-f4-3" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li><li>
+      <a href="#ref-for-dfn-f4-4" title="§ 3.3 E3 DID URL Author">§ 3.3 E3 DID URL Author</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f5" aria-label="Links in this document to definition: F5 Use DID URL">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f5" aria-label="Permalink for definition: F5 Use DID URL. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f5-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f6" aria-label="Links in this document to definition: F6 Resolve">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f6" aria-label="Permalink for definition: F6 Resolve. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f6-1" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> <a href="#ref-for-dfn-f6-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-f6-3" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-f6-4" title="Reference 2">(2)</a> <a href="#ref-for-dfn-f6-5" title="Reference 3">(3)</a> <a href="#ref-for-dfn-f6-6" title="Reference 4">(4)</a> <a href="#ref-for-dfn-f6-7" title="Reference 5">(5)</a> <a href="#ref-for-dfn-f6-8" title="Reference 6">(6)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f7" aria-label="Links in this document to definition: F7 Read VDR State">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f7" aria-label="Permalink for definition: F7 Read VDR State. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f7-1" title="§ 2.2 Description">§ 2.2 Description</a> <a href="#ref-for-dfn-f7-2" title="Reference 2">(2)</a> 
+    </li><li>
+      <a href="#ref-for-dfn-f7-3" title="§ 2.3 Dictionary">§ 2.3 Dictionary</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-t1" aria-label="Links in this document to definition: T1 VDR Trust Boundary">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-t1" aria-label="Permalink for definition: T1 VDR Trust Boundary. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-t1-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-t1-2" title="§ 3.1 E1 DID Controller">§ 3.1 E1 DID Controller</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-t2" aria-label="Links in this document to definition: T2 Resolution Trust Boundary">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-t2" aria-label="Permalink for definition: T2 Resolution Trust Boundary. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-t2-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li><li>
+      <a href="#ref-for-dfn-t2-2" title="§ 3.4 E4 Resolver Service Provider">§ 3.4 E4 Resolver Service Provider</a> 
+    </li><li>
+      <a href="#ref-for-dfn-t2-3" title="§ 4.2 Threat Details">§ 4.2 Threat Details</a> <a href="#ref-for-dfn-t2-4" title="Reference 2">(2)</a> <a href="#ref-for-dfn-t2-5" title="Reference 3">(3)</a> <a href="#ref-for-dfn-t2-6" title="Reference 4">(4)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-t3" aria-label="Links in this document to definition: T3 DID URL Trust Boundary">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-t3" aria-label="Permalink for definition: T3 DID URL Trust Boundary. Activate to close this dialog.">Permalink</a>
+         
+        
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-t3-1" title="§ 2.2 Description">§ 2.2 Description</a> 
+    </li>
+  </ul>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+
+
+
+<p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
+  </p><script id="respec-highlight-vars">(() => {
+// @ts-check
+
+if (document.respec) {
+  document.respec.ready.then(setupVarHighlighter);
+} else {
+  setupVarHighlighter();
+}
+
+function setupVarHighlighter() {
+  document
+    .querySelectorAll("var")
+    .forEach(varElem => varElem.addEventListener("click", highlightListener));
+}
+
+/**
+ * @param {MouseEvent} ev
+ */
+function highlightListener(ev) {
+  ev.stopPropagation();
+  const varElem = /** @type {HTMLElement} */ (ev.target);
+  const hightligtedElems = highlightVars(varElem);
+  const resetListener = () => {
+    const hlColor = getHighlightColor(varElem);
+    hightligtedElems.forEach(el => removeHighlight(el, hlColor));
+    [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
+  };
+  if (hightligtedElems.length) {
+    document.body.addEventListener("click", resetListener, { once: true });
+  }
+}
+
+// availability of highlight colors. colors from var.css
+const HL_COLORS = new Map([
+  ["respec-hl-c1", true],
+  ["respec-hl-c2", true],
+  ["respec-hl-c3", true],
+  ["respec-hl-c4", true],
+  ["respec-hl-c5", true],
+  ["respec-hl-c6", true],
+  ["respec-hl-c7", true],
+]);
+
+/**
+ * @param {HTMLElement} target
+ */
+function getHighlightColor(target) {
+  // return current colors if applicable
+  const { value } = target.classList;
+  const re = /respec-hl-\w+/;
+  const activeClass = re.test(value) && value.match(re);
+  if (activeClass) return activeClass[0];
+
+  // first color preference
+  if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
+
+  // otherwise get some other available color
+  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
+}
+
+/**
+ * @param {HTMLElement} varElem
+ */
+function highlightVars(varElem) {
+  const textContent = norm(varElem.textContent);
+  const parent = /** @type {HTMLElement} */ (
+    varElem.closest(".algorithm, section")
+  );
+  if (!parent) return [];
+  const highlightColor = getHighlightColor(varElem);
+
+  const varsToHighlight = [...parent.querySelectorAll("var")].filter(
+    el =>
+      norm(el.textContent) === textContent &&
+      el.closest(".algorithm, section") === parent
+  );
+
+  // update availability of highlight color
+  const colorStatus = varsToHighlight[0].classList.contains("respec-hl");
+  HL_COLORS.set(highlightColor, colorStatus);
+
+  // highlight vars
+  if (colorStatus) {
+    varsToHighlight.forEach(el => removeHighlight(el, highlightColor));
+    return [];
+  } else {
+    varsToHighlight.forEach(el => addHighlight(el, highlightColor));
+  }
+  return varsToHighlight;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @param {string} highlightColor
+ */
+function removeHighlight(el, highlightColor) {
+  el.classList.remove("respec-hl", highlightColor);
+  // clean up empty class attributes so they don't come in export
+  if (!el.classList.length) el.removeAttribute("class");
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {string} highlightColor
+ */
+function addHighlight(elem, highlightColor) {
+  elem.classList.add("respec-hl", highlightColor);
+}
+
+/**
+ * Same as `norm` from src/core/utils, but our build process doesn't allow
+ * imports in runtime scripts, so duplicated here.
+ * @param {string} str
+ */
+function norm(str) {
+  return str.trim().replace(/\s+/g, " ");
+}
+})()</script><script id="respec-dfn-panel">(() => {
+// @ts-check
+if (document.respec) {
+  document.respec.ready.then(setupPanel);
+} else {
+  setupPanel();
+}
+
+function setupPanel() {
+  const listener = panelListener();
+  document.body.addEventListener("keydown", listener);
+  document.body.addEventListener("click", listener);
+}
+
+function panelListener() {
+  /** @type {HTMLElement | null} */
+  let panel = null;
+  /**
+   * @param {KeyboardEvent|MouseEvent} event
+   */
+  return event => {
+    const { target, type } = event;
+
+    if (!(target instanceof HTMLElement)) return;
+
+    // For keys, we only care about Enter key to activate the panel
+    // otherwise it's activated via a click.
+    if (
+      type === "keydown" &&
+      /** @type {KeyboardEvent} */ (event).key !== "Enter"
+    )
+      return;
+
+    const action = deriveAction(event);
+
+    switch (action) {
+      case "show": {
+        hidePanel(panel);
+        /** @type {HTMLElement | null} */
+        const dfn = target.closest("dfn, .index-term");
+        if (!dfn?.id) break;
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        if (!panel) break;
+        const coords = deriveCoordinates(
+          /** @type {MouseEvent|KeyboardEvent} */ (event)
+        );
+        displayPanel(dfn, panel, coords);
+        break;
+      }
+      case "dock": {
+        if (panel) {
+          panel.style.left = "";
+          panel.style.top = "";
+          panel.classList.add("docked");
+        }
+        break;
+      }
+      case "hide": {
+        hidePanel(panel);
+        panel = null;
+        break;
+      }
+    }
+  };
+}
+
+/**
+ * @param {MouseEvent|KeyboardEvent} event
+ */
+function deriveCoordinates(event) {
+  const target = /** @type HTMLElement */ (event.target);
+
+  // We prevent synthetic AT clicks from putting
+  // the dialog in a weird place. The AT events sometimes
+  // lack coordinates, so they have clientX/Y = 0
+  const rect = target.getBoundingClientRect();
+  if (
+    event instanceof MouseEvent &&
+    event.clientX >= rect.left &&
+    event.clientY >= rect.top
+  ) {
+    // The event probably happened inside the bounding rect...
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  // Offset to the middle of the element
+  const x = rect.x + rect.width / 2;
+  // Placed at the bottom of the element
+  const y = rect.y + rect.height;
+  return { x, y };
+}
+
+/**
+ * @param {Event} event
+ */
+function deriveAction(event) {
+  const target = /** @type {HTMLElement} */ (event.target);
+  const hitALink = !!target.closest("a");
+  if (target.closest("dfn:not([data-cite]), .index-term")) {
+    return hitALink ? "none" : "show";
+  }
+  if (target.closest(".dfn-panel")) {
+    if (hitALink) {
+      return target.classList.contains("self-link") ? "hide" : "dock";
+    }
+
+    const panel = /** @type {HTMLElement} */ (target.closest(".dfn-panel"));
+    return panel.classList.contains("docked") ? "hide" : "none";
+  }
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
+    return "hide";
+  }
+  return "none";
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {HTMLElement} panel
+ * @param {{ x: number, y: number }} clickPosition
+ */
+function displayPanel(dfn, panel, { x, y }) {
+  panel.hidden = false;
+  // distance (px) between edge of panel and the pointing triangle (caret)
+  const MARGIN = 20;
+
+  const dfnRects = dfn.getClientRects();
+  // Find the `top` offset when the `dfn` can be spread across multiple lines
+  let closestTop = 0;
+  let minDiff = Infinity;
+  for (const rect of dfnRects) {
+    const { top, bottom } = rect;
+    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
+    if (diffFromClickY < minDiff) {
+      minDiff = diffFromClickY;
+      closestTop = top;
+    }
+  }
+
+  const top = window.scrollY + closestTop + dfnRects[0].height;
+  const left = x - MARGIN;
+  panel.style.left = `${left}px`;
+  panel.style.top = `${top}px`;
+
+  // Find if the panel is flowing out of the window
+  const panelRect = panel.getBoundingClientRect();
+  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
+  if (panelRect.right > SCREEN_WIDTH) {
+    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
+    const newCaretOffset = left - newLeft;
+    panel.style.left = `${newLeft}px`;
+    /** @type {HTMLElement | null} */
+    const caret = panel.querySelector(".caret");
+    if (caret) caret.style.left = `${newCaretOffset}px`;
+  }
+
+  // As it's a dialog, we trap focus.
+  // TODO: when <dialog> becomes a implemented, we should really
+  // use that.
+  trapFocus(panel, dfn);
+}
+
+/**
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function trapFocus(panel, dfn) {
+  /** @type NodeListOf<HTMLAnchorElement> elements */
+  const anchors = panel.querySelectorAll("a[href]");
+  // No need to trap focus
+  if (!anchors.length) return;
+
+  // Move focus to first anchor element
+  const first = anchors.item(0);
+  first.focus();
+
+  const trapListener = createTrapListener(anchors, panel, dfn);
+  panel.addEventListener("keydown", trapListener);
+
+  // Hiding the panel releases the trap
+  const mo = new MutationObserver(records => {
+    const [record] = records;
+    const target = /** @type HTMLElement */ (record.target);
+    if (target.hidden) {
+      panel.removeEventListener("keydown", trapListener);
+      mo.disconnect();
+    }
+  });
+  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+}
+
+/**
+ *
+ * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function createTrapListener(anchors, panel, dfn) {
+  const lastIndex = anchors.length - 1;
+  let currentIndex = 0;
+  /**
+   * @param {KeyboardEvent} event
+   */
+  return event => {
+    switch (event.key) {
+      // Hitting "Tab" traps us in a nice loop around elements.
+      case "Tab": {
+        event.preventDefault();
+        currentIndex += event.shiftKey ? -1 : +1;
+        if (currentIndex < 0) {
+          currentIndex = lastIndex;
+        } else if (currentIndex > lastIndex) {
+          currentIndex = 0;
+        }
+        anchors.item(currentIndex).focus();
+        break;
+      }
+
+      // Hitting "Enter" on an anchor releases the trap.
+      case "Enter":
+        hidePanel(panel);
+        break;
+
+      // Hitting "Escape" returns focus to dfn.
+      case "Escape":
+        hidePanel(panel);
+        dfn.focus();
+        return;
+    }
+  };
+}
+
+/** @param {HTMLElement | null} panel */
+function hidePanel(panel) {
+  if (!panel) return;
+  panel.hidden = true;
+  panel.classList.remove("docked");
+}
+})()</script><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>
